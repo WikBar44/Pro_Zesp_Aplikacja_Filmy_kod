@@ -1,0 +1,223 @@
+/* Główne ustawienia */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: #16213e;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Zakładki (Tabs) */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 25px;
+    background: #0f3460;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: #95a5a6;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.tab-btn.active {
+    background: #e94560;
+    color: white;
+}
+
+/* Ukrywanie sekcji */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Karty Propozycji (Grid) */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.movie-card {
+    background: #0f3460;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.movie-card:hover { transform: scale(1.05); }
+
+.poster {
+    height: 180px;
+    background: #533483;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Listy filmów */
+.movie-list { list-style: none; padding: 0; }
+
+.movie-item {
+    background: #0f3460;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.watched { border-left: 5px solid #4caf50; }
+
+.user-rating { color: #f1c40f; font-size: 0.9em; margin-top: 5px; }
+
+/* Recenzje społeczności */
+.review-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.rating-stars { color: #f1c40f; }
+
+/* Formularz */
+.form-box { background: #0f3460; padding: 20px; border-radius: 10px; }
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    background: #16213e;
+    border: 1px solid #533483;
+    color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #e94560;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.action-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+textarea {
+    width: 100%;
+    background: #16213e;
+    border: 1px solid #533483;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: vertical; 
+}
+/* Filtry */
+.filter-box {
+    background: #0f3460;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Asystent AI */
+.ai-assistant {
+    background: #16213e;
+    border: 1px solid #e94560;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+}
+
+.chat-window {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    border-bottom: 1px solid #533483;
+}
+
+.bot-msg {
+    background: #533483;
+    padding: 8px 12px;
+    border-radius: 10px 10px 10px 0;
+    max-width: 80%;
+    font-size: 0.9em;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+}
+
+#user-query {
+    flex: 1;
+    background: #0f3460;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#send-query {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}

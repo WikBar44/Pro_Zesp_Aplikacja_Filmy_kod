@@ -1,0 +1,9 @@
+{
+  "id": 101,
+  "title": "Dobry, zły i brzydki",
+  "genre": "Western",
+  "actor": "Clint Eastwood",
+  "status": "watched",
+  "rating": 10,
+  "visibility": "public"
+}
