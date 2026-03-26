@@ -72,70 +72,70 @@
             <section id="community" class="tab-content">
                 <h2>💬 Recenzje innych</h2>
                 <div class="review-card">
-                    <p><strong>@Kasia_Film:</strong> "Incepcja to mózgojeb! Polecam każdemu."</p>
+                    <p><strong>@Kasia_Film:</strong> "Incepcja to świetny film! Polecam każdemu."</p>
                     <span class="rating-stars">⭐⭐⭐⭐⭐ 10/10</span>
                 </div>
                 <div class="review-card">
-                    <p><strong>@Marek88:</strong> "Batman był spoko, ale trochę mroczny."</p>
-                    <span class="rating-stars">⭐⭐⭐⭐ 8/10</span>
+                    <p><strong>@Marik1234:</strong> "Batman był okropnym filmem."</p>
+                    <span class="rating-stars">⭐ 2/10</span>
                 </div>
             </section>
 
-<section id="add" class="tab-content">
-    <h2>Dodaj nowy film</h2>
-    <div class="form-box">
-        <form id="movie-form">
-            <label>Tytuł filmu</label>
-            <input type="text" id="movie-title" placeholder="np. Diuna" required>
-            
-            <label>Status</label>
-            <select id="movie-status" onchange="toggleReviewFields()">
-                <option value="pending">🍿 Do obejrzenia</option>
-                <option value="watched">✅ Już obejrzane</option>
-            </select>
+            <section id="add" class="tab-content">
+                <h2>Dodaj nowy film</h2>
+                <div class="form-box">
+                    <form id="movie-form">
+                        <label>Tytuł filmu</label>
+                        <input type="text" id="movie-title" placeholder="np. Diuna" required>
+                        
+                        <label>Status</label>
+                        <select id="movie-status" onchange="toggleReviewFields()">
+                            <option value="pending">🍿 Do obejrzenia</option>
+                            <option value="watched">✅ Już obejrzane</option>
+                        </select>
 
-            <div id="review-fields" style="display: none; border-top: 1px solid #533483; margin-top: 15px; padding-top: 15px;">
-                <label>Twoja Ocena (1-10)</label>
-                <input type="number" id="movie-rating" min="1" max="10" placeholder="np. 9">
+                        <div id="review-fields" style="display: none; border-top: 1px solid #533483; margin-top: 15px; padding-top: 15px;">
+                            <label>Twoja Ocena (1-10)</label>
+                            <input type="number" id="movie-rating" min="1" max="10" placeholder="np. 9">
+                            
+                            <label>Twoja Recenzja</label>
+                            <textarea id="movie-review" rows="3" placeholder="Co sądzisz o tym filmie?"></textarea>
+
+                            <label>Widoczność recenzji:</label>
+                            <select id="movie-visibility">
+                                <option value="private">🔒 Prywatna (tylko dla mnie)</option>
+                                <option value="public">🌍 Publiczna (dla wszystkich)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Zapisz w mojej bazie</button>
+                    </form>
+                </div>
+            </section>
+            <section id="recommendations" class="tab-content">
+                <h2>🤖 Inteligentne Rekomendacje</h2>
                 
-                <label>Twoja Recenzja</label>
-                <textarea id="movie-review" rows="3" placeholder="Co sądzisz o tym filmie?"></textarea>
+                <div class="filter-box">
+                    <h4>Twoje Preferencje</h4>
+                    <div class="filter-tags">
+                        <label><input type="checkbox" value="Western"> Western</label>
+                        <label><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+                        <label><input type="checkbox" value="Dramat"> Dramat</label>
+                        <label><input type="checkbox" value="Komedia"> Komedia</label>
+                    </div>
+                    <button class="action-btn" style="margin-top: 10px;">Filtruj bazę</button>
+                </div>
 
-                <label>Widoczność recenzji:</label>
-                <select id="movie-visibility">
-                    <option value="private">🔒 Prywatna (tylko dla mnie)</option>
-                    <option value="public">🌍 Publiczna (dla wszystkich)</option>
-                </select>
-            </div>
-            
-            <button type="submit" class="submit-btn">Zapisz w mojej bazie</button>
-        </form>
-    </div>
-</section>
-<section id="recommendations" class="tab-content">
-    <h2>🤖 Inteligentne Rekomendacje</h2>
-    
-    <div class="filter-box">
-        <h4>Twoje Preferencje</h4>
-        <div class="filter-tags">
-            <label><input type="checkbox" value="Western"> Western</label>
-            <label><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
-            <label><input type="checkbox" value="Dramat"> Dramat</label>
-            <label><input type="checkbox" value="Komedia"> Komedia</label>
-        </div>
-        <button class="action-btn" style="margin-top: 10px;">Filtruj bazę</button>
-    </div>
-
-    <div class="ai-assistant">
-        <div class="chat-window" id="chat-window">
-            <p class="bot-msg">Cześć! Jestem Twoim asystentem filmowym. Jakiego filmu szukasz? (np. "Poleć mi western z Clintem Eastwoodem")</p>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="user-query" placeholder="Zapytaj AI...">
-            <button id="send-query">Zapytaj</button>
-        </div>
-    </div>
-</section>
+                <div class="ai-assistant">
+                    <div class="chat-window" id="chat-window">
+                        <p class="bot-msg">Cześć! Jestem Twoim asystentem filmowym. Jakiego filmu szukasz? (np. "Poleć mi western z Clintem Eastwoodem")</p>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="user-query" placeholder="Zapytaj AI...">
+                        <button id="send-query">Zapytaj</button>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <footer>
