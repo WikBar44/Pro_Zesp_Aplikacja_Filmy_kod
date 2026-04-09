@@ -12,6 +12,7 @@
         <header>
             <h1>🎬 CineKeep</h1>
             <nav class="tabs">
+                <button class="tab-btn" data-target="login-section">🔑 Logowanie</button>
                 <button class="tab-btn active" data-target="home">🏠 Główna</button>
                 <button class="tab-btn" data-target="watchlist">🍿 Kolejka</button>
                 <button class="tab-btn" data-target="history">✅ Historia</button>
@@ -48,25 +49,29 @@
 
             <section id="watchlist" class="tab-content">
                 <h2>🍿 Twoja Kolejka</h2>
-                <ul class="movie-list" id="pending-list">
-                    <li class="movie-item">
-                        <span>Matrix (1999)</span>
-                        <button class="action-btn">Obejrzane</button>
-                    </li>
-                </ul>
+                <div class="sort-container">
+                    <label>Sortuj listę:</label>
+                    <select class="sort-select" onchange="sortMovies(this.value)">
+                        <option value="date-new">Najnowsze</option>
+                        <option value="date-old">Najstarsze</option>
+                        <option value="alpha">Alfabetycznie (A-Z)</option>
+                    </select>
+                </div>
+                <ul class="movie-list" id="pending-list"></ul>
             </section>
-
             <section id="history" class="tab-content">
-                <h2>✅ Twoje Oceny</h2>
-                <ul class="movie-list" id="watched-list">
-                    <li class="movie-item watched">
-                        <div>
-                            <strong>Gladiator</strong>
-                            <div class="user-rating">Twoja ocena: ⭐ 10/10</div>
-                        </div>
-                        <span class="status-badge">Obejrzany</span>
-                    </li>
-                </ul>
+                <h2>✅ Twoja Historia</h2>
+                <div class="sort-container">
+                    <label>Sortuj historię:</label>
+                    <select class="sort-select" onchange="sortMovies(this.value)">
+                        <option value="date-new">Najnowsze</option>
+                        <option value="date-old">Najstarsze</option>
+                        <option value="alpha">Alfabetycznie (A-Z)</option>
+                        <option value="rating-high">Ocena (od najwyższej)</option>
+                        <option value="rating-low">Ocena (od najniższej)</option>
+                    </select>
+                </div>
+                <ul class="movie-list" id="watched-list"></ul>
             </section>
 
             <section id="community" class="tab-content">
@@ -134,6 +139,23 @@
                         <input type="text" id="user-query" placeholder="Zapytaj AI...">
                         <button id="send-query">Zapytaj</button>
                     </div>
+                </div>
+            </section>
+            <section id="login-section" class="tab-content">
+                <h2>Zaloguj się do CineKeep</h2>
+                <div class="form-box">
+                    <form id="login-form">
+                        <label>Nazwa użytkownika</label>
+                        <input type="text" id="login-user" placeholder="Twój login" required>
+                        
+                        <label>Hasło</label>
+                        <input type="password" id="login-pass" placeholder="********" required>
+                        
+                        <button type="submit" class="submit-btn">Zaloguj się</button>
+                        <p style="margin-top: 15px; font-size: 0.8em; text-align: center;">
+                            Nie masz konta? <a href="#" style="color: #e94560;">Zarejestruj się</a>
+                        </p>
+                    </form>
                 </div>
             </section>
         </main>

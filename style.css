@@ -18,6 +18,26 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+.sort-select {
+    background: #16213e;
+    color: white;
+    border: 1px solid #533483;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sort-container {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+
 /* Zakładki (Tabs) */
 .tabs {
     display: flex;
@@ -141,13 +161,28 @@ input, select {
 }
 
 .action-btn {
-    background: #4caf50;
+    background-color: #4caf50;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 0.8em;
+    transition: 0.3s;
 }
+
+.action-btn:hover {
+    background-color: #45a049;
+}
+
+.status-badge {
+    font-size: 0.75em;
+    background: #533483;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #fff;
+}
+
 textarea {
     width: 100%;
     background: #16213e;
@@ -158,6 +193,23 @@ textarea {
     box-sizing: border-box;
     font-family: inherit;
     resize: vertical; 
+}
+
+.visibility-btn {
+    background: #533483;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.visibility-btn:hover {
+    background: #e94560;
 }
 /* Filtry */
 .filter-box {
