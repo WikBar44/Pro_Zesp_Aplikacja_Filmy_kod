@@ -1,179 +1,165 @@
-// 1. INICJALIZACJA BAZY DANYCH
-let movies = JSON.parse(localStorage.getItem('cinekeep_db')) || [];
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineKeep - Twoja Lista Filmów</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-function toggleReviewFields() {
-    const status = document.getElementById('movie-status').value;
-    const reviewFields = document.getElementById('review-fields');
-    if (reviewFields) {
-        reviewFields.style.display = status === 'watched' ? 'block' : 'none';
-    }
-}
+    <div class="container">
+        <header>
+            <h1>🎬 CineKeep</h1>
+            <nav class="tabs">
+                <button class="tab-btn" data-target="login-section">🔑 Logowanie</button>
+                <button class="tab-btn active" data-target="home">🏠 Główna</button>
+                <button class="tab-btn" data-target="watchlist">🍿 Kolejka</button>
+                <button class="tab-btn" data-target="history">✅ Historia</button>
+                <button class="tab-btn" data-target="community">👥 Społeczność</button>
+                <button class="tab-btn" data-target="add">➕ Dodaj</button>
+                <button class="tab-btn" data-target="recommendations">🤖 Rekomendacje AI</button>
+            </nav>
+        </header>
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 2. START APLIKACJI
-    renderMovies();
-
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const user = document.getElementById('login-user').value;
-            
-            alert(`Witaj ${user}! Zostałeś pomyślnie zalogowany.`);
-            document.querySelector('[data-target="login-section"]').innerText = `👤 ${user}`;
-            document.querySelector('[data-target="home"]').click();
-        });
-    }
-
-    // 3. MECHANIZM PRZEŁĄCZANIA ZAKŁADEK
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.getAttribute('data-target');
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(target).classList.add('active');
-        });
-    });
-
-    // 4. OBSŁUGA FORMULARZA DODAWANIA FILMU
-    const form = document.getElementById('movie-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const movieData = {
-                id: Date.now(),
-                title: document.getElementById('movie-title').value,
-                status: document.getElementById('movie-status').value,
-                rating: document.getElementById('movie-rating').value || null,
-                review: document.getElementById('movie-review').value || "",
-                visibility: document.getElementById('movie-visibility').value
-            };
-
-            movies.push(movieData); 
-            saveAndRefresh();       
-            
-            alert(`Film "${movieData.title}" został zapisany!`);
-            this.reset();
-            toggleReviewFields();
-        });
-    }
-
-    // 5. OBSŁUGA ASYSTENTA AI (CZATBOTA)
-    document.getElementById('send-query')?.addEventListener('click', () => {
-        const input = document.getElementById('user-query');
-        const chatWindow = document.getElementById('chat-window');
-
-        if (input.value.trim() !== "") {
-            const userMsg = document.createElement('p');
-            userMsg.style.textAlign = "right";
-            userMsg.innerHTML = `<span style="background: #e94560; padding: 8px; border-radius: 10px 10px 0 10px; display: inline-block;">${input.value}</span>`;
-            chatWindow.appendChild(userMsg);
-
-            setTimeout(() => {
-                const botMsg = document.createElement('p');
-                botMsg.className = "bot-msg";
-                botMsg.innerText = "Analizuję Twoje preferencje... Funkcja AI zostanie w pełni aktywowana w Sprincie 6!";
-                chatWindow.appendChild(botMsg);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            }, 1000);
-
-            input.value = "";
-        }
-    });
-});
-
-// 6. RENDEROWANIE LIST (Logika wyświetlania filmów w zakładkach)
-function renderMovies() {
-    const pendingList = document.getElementById('pending-list');
-    const watchedList = document.getElementById('watched-list');
-
-    if (!pendingList || !watchedList) return;
-
-    pendingList.innerHTML = '';
-    watchedList.innerHTML = '';
-
-    movies.forEach((movie, index) => {
-        const li = document.createElement('li');
-        li.className = `movie-item ${movie.status === 'watched' ? 'watched' : ''}`;
-
-        if (movie.status === 'pending') {
-            li.innerHTML = `
-                <span>${movie.title}</span>
-                <button class="action-btn" onclick="markAsWatched(${index})">Obejrzane</button>
-            `;
-            pendingList.appendChild(li);
-        } else {
-            const visibilityIcon = movie.visibility === 'public' ? '🌍' : '🔒';
-            const visibilityText = movie.visibility === 'public' ? 'Publiczna' : 'Prywatna';
-
-            li.innerHTML = `
-                <div>
-                    <strong>${movie.title}</strong>
-                    <div class="user-rating">⭐ ${movie.rating || '?'}/10</div>
-                    <p style="font-size: 0.8em; opacity: 0.8; margin: 5px 0;">${movie.review}</p>
+        <main id="content">
+            <section id="home" class="tab-content active">
+                <div class="section-header">
+                    <h2>🔥 Proponowane dla Ciebie</h2>
+                    <p>Najciekawsze premiery i trendy</p>
                 </div>
-                <div class="movie-actions">
-                    <button class="visibility-btn" onclick="toggleVisibility(${index})" title="Zmień widoczność">
-                        ${visibilityIcon} <span style="font-size: 0.7em;">${visibilityText}</span>
-                    </button>
+                <div class="movie-grid">
+                    <div class="movie-card">
+                        <div class="poster">🎬</div>
+                        <h4>Batman</h4>
+                        <span class="tag">Akcja</span>
+                    </div>
+                    <div class="movie-card">
+                        <div class="poster">🎬</div>
+                        <h4>Diuna 2</h4>
+                        <span class="tag">Sci-Fi</span>
+                    </div>
+                    <div class="movie-card">
+                        <div class="poster">🎬</div>
+                        <h4>Incepcja</h4>
+                        <span class="tag">Thriller</span>
+                    </div>
                 </div>
-            `;
-            watchedList.appendChild(li);
-        }
-    });
-}
+            </section>
 
-// 7. PRZENOSZENIE FILMU (Z Kolejki do Historii)
-window.markAsWatched = function(index) {
-    const rating = prompt("Jak oceniasz ten film (1-10)?", "10");
-    const review = prompt("Twoja krótka recenzja:", "Świetny film!");
-    
-    if (rating !== null) {
-        movies[index].status = 'watched';
-        movies[index].rating = rating;
-        movies[index].review = review;
-        saveAndRefresh();
-    }
-};
+            <section id="watchlist" class="tab-content">
+                <h2>🍿 Twoja Kolejka</h2>
+                <div class="sort-container">
+                    <label>Sortuj listę:</label>
+                    <select class="sort-select" onchange="sortMovies(this.value)">
+                        <option value="date-new">Najnowsze</option>
+                        <option value="date-old">Najstarsze</option>
+                        <option value="alpha">Alfabetycznie (A-Z)</option>
+                    </select>
+                </div>
+                <ul class="movie-list" id="pending-list"></ul>
+            </section>
+            <section id="history" class="tab-content">
+                <h2>✅ Twoja Historia</h2>
+                <div class="sort-container">
+                    <label>Sortuj historię:</label>
+                    <select class="sort-select" onchange="sortMovies(this.value)">
+                        <option value="date-new">Najnowsze</option>
+                        <option value="date-old">Najstarsze</option>
+                        <option value="alpha">Alfabetycznie (A-Z)</option>
+                        <option value="rating-high">Ocena (od najwyższej)</option>
+                        <option value="rating-low">Ocena (od najniższej)</option>
+                    </select>
+                </div>
+                <ul class="movie-list" id="watched-list"></ul>
+            </section>
 
-// 8. PRZEŁĄCZANIE WIDOCZNOŚCI (Publiczna / Prywatna)
-window.toggleVisibility = function(index) {
-    movies[index].visibility = (movies[index].visibility === 'public') ? 'private' : 'public';
-    saveAndRefresh();
-};
+            <section id="community" class="tab-content">
+                <h2>💬 Recenzje Społeczności</h2>
+                <p style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Oto co ostatnio oglądali inni użytkownicy CineKeep:</p>
+                <div id="community-reviews" class="reviews-grid">
+                    </div>
+            </section>
 
-// 9. POMOCNICZA FUNKCJA ZAPISU I ODŚWIEŻANIA
-function saveAndRefresh() {
-    localStorage.setItem('cinekeep_db', JSON.stringify(movies));
-    renderMovies();
-}
+            <section id="add" class="tab-content">
+                <h2>Dodaj nowy film</h2>
+                <div class="form-box">
+                    <form id="movie-form">
+                        <label>Tytuł filmu</label>
+                        <input type="text" id="movie-title" placeholder="np. Diuna" required>
+                        
+                        <label>Status</label>
+                        <select id="movie-status" onchange="toggleReviewFields()">
+                            <option value="pending">🍿 Do obejrzenia</option>
+                            <option value="watched">✅ Już obejrzane</option>
+                        </select>
 
-// 10. FUNKCJA: Sortowanie bazy filmów
-window.sortMovies = function(criteria) {
-    if (criteria === 'alpha') {
-        movies.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
-    } 
-    else if (criteria === 'rating-high') {
-        movies.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    } 
-    else if (criteria === 'rating-low') {
-        // Od najniższej oceny
-        movies.sort((a, b) => {
-            if (!a.rating) return 1;
-            if (!b.rating) return -1;
-            return a.rating - b.rating;
-        });
-    }
-    else if (criteria === 'date-new') {
-        movies.sort((a, b) => b.id - a.id);
-    }
-    else if (criteria === 'date-old') {
-        movies.sort((a, b) => a.id - b.id);
-    }
+                        <div id="review-fields" style="display: none; border-top: 1px solid #533483; margin-top: 15px; padding-top: 15px;">
+                            <label>Twoja Ocena (1-10)</label>
+                            <input type="number" id="movie-rating" min="1" max="10" placeholder="np. 9">
+                            
+                            <label>Twoja Recenzja</label>
+                            <textarea id="movie-review" rows="3" placeholder="Co sądzisz o tym filmie?"></textarea>
 
-    renderMovies();
-};
+                            <label>Widoczność recenzji:</label>
+                            <select id="movie-visibility">
+                                <option value="private">🔒 Prywatna (tylko dla mnie)</option>
+                                <option value="public">🌍 Publiczna (dla wszystkich)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Zapisz w mojej bazie</button>
+                    </form>
+                </div>
+            </section>
+            <section id="recommendations" class="tab-content">
+                <h2>🤖 Inteligentne Rekomendacje</h2>
+                
+                <div class="filter-box">
+                    <h4>Twoje Preferencje</h4>
+                    <div class="filter-tags">
+                        <label><input type="checkbox" value="Western"> Western</label>
+                        <label><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+                        <label><input type="checkbox" value="Dramat"> Dramat</label>
+                        <label><input type="checkbox" value="Komedia"> Komedia</label>
+                    </div>
+                    <button class="action-btn" style="margin-top: 10px;">Filtruj bazę</button>
+                </div>
+
+                <div class="ai-assistant">
+                    <div class="chat-window" id="chat-window">
+                        <p class="bot-msg">Cześć! Jestem Twoim asystentem filmowym. Jakiego filmu szukasz? (np. "Poleć mi western z Clintem Eastwoodem")</p>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="user-query" placeholder="Zapytaj AI...">
+                        <button id="send-query">Zapytaj</button>
+                    </div>
+                </div>
+            </section>
+            <section id="login-section" class="tab-content">
+                <h2>Zaloguj się do CineKeep</h2>
+                <div class="form-box">
+                    <form id="login-form">
+                        <label>Nazwa użytkownika</label>
+                        <input type="text" id="login-user" placeholder="Twój login" required>
+                        
+                        <label>Hasło</label>
+                        <input type="password" id="login-pass" placeholder="********" required>
+                        
+                        <button type="submit" class="submit-btn">Zaloguj się</button>
+                        <p style="margin-top: 15px; font-size: 0.8em; text-align: center;">
+                            Nie masz konta? <a href="#" style="color: #e94560;">Zarejestruj się</a>
+                        </p>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 CineKeep Team - Projekt Zespołowy</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

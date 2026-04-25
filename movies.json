@@ -1,9 +1,42 @@
-{
-  "id": 101,
-  "title": "Dobry, zły i brzydki",
-  "genre": "Western",
-  "actor": "Clint Eastwood",
-  "status": "watched",
-  "rating": 10,
-  "visibility": "public"
-}
+[
+  {
+    "id": 1776871163293,
+    "title": "Avatar",
+    "status": "watched",
+    "rating": "7",
+    "review": "nawet ",
+    "visibility": "private"
+  },
+  {
+    "id": 1776870915067,
+    "title": "Diuna",
+    "status": "pending",
+    "rating": null,
+    "review": "",
+    "visibility": "private"
+  },
+  {
+    "id": 1776870940162,
+    "title": "Joker",
+    "status": "watched",
+    "rating": "8",
+    "review": "dobry ",
+    "visibility": "public"
+  },
+  {
+    "id": 1776871073748,
+    "title": "Reksio",
+    "status": "watched",
+    "rating": "5",
+    "review": "git",
+    "visibility": "private"
+  },
+  {
+    "id": 1776870978297,
+    "title": "Równi goście",
+    "status": "watched",
+    "rating": "10",
+    "review": "Świetny film!",
+    "visibility": "public"
+  }
+]
