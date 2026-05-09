@@ -12,7 +12,8 @@
         <header>
             <h1>🎬 CineKeep</h1>
             <nav class="tabs">
-                <button class="tab-btn" data-target="login-section">🔑 Logowanie</button>
+                <button id="nav-login-btn" class="tab-btn" data-target="login-section">🔑 Logowanie</button>
+                <button id="logout-btn" class="tab-btn" style="display: none;">🚪 Wyloguj</button>
                 <button class="tab-btn active" data-target="home">🏠 Główna</button>
                 <button class="tab-btn" data-target="watchlist">🍿 Kolejka</button>
                 <button class="tab-btn" data-target="history">✅ Historia</button>
@@ -57,6 +58,15 @@
                         <option value="alpha">Alfabetycznie (A-Z)</option>
                     </select>
                 </div>
+                    <div class="filter-container">
+                        <span>Filtruj tagi:</span>
+                        <button class="filter-btn active" onclick="filterByTag('all')">Wszystkie</button>
+                        <button class="filter-btn" onclick="filterByTag('Sci-Fi')">Sci-Fi</button>
+                        <button class="filter-btn" onclick="filterByTag('Dramat')">Dramat</button>
+                        <button class="filter-btn" onclick="filterByTag('Komedia')">Komedia</button>
+                        <button class="filter-btn" onclick="filterByTag('Akcja')">Akcja</button>
+                        <button class="filter-btn" onclick="filterByTag('Horror')">Horror</button>
+                    </div>
                 <ul class="movie-list" id="pending-list"></ul>
             </section>
             <section id="history" class="tab-content">
@@ -70,6 +80,15 @@
                         <option value="rating-high">Ocena (od najwyższej)</option>
                         <option value="rating-low">Ocena (od najniższej)</option>
                     </select>
+                </div>
+                <div class="filter-container">
+                    <span>Filtruj tagi:</span>
+                    <button class="filter-btn active" onclick="filterByTag('all')">Wszystkie</button>
+                    <button class="filter-btn" onclick="filterByTag('Sci-Fi')">Sci-Fi</button>
+                    <button class="filter-btn" onclick="filterByTag('Dramat')">Dramat</button>
+                    <button class="filter-btn" onclick="filterByTag('Komedia')">Komedia</button>
+                    <button class="filter-btn" onclick="filterByTag('Akcja')">Akcja</button>
+                    <button class="filter-btn" onclick="filterByTag('Horror')">Horror</button>
                 </div>
                 <ul class="movie-list" id="watched-list"></ul>
             </section>
@@ -107,6 +126,14 @@
                                 <option value="public">🌍 Publiczna (dla wszystkich)</option>
                             </select>
                         </div>
+                        <label>Tagi (wybierz kilka):</label>
+                        <div class="tag-selection">
+                            <label><input type="checkbox" name="tags" value="Sci-Fi"> Sci-Fi</label>
+                            <label><input type="checkbox" name="tags" value="Dramat"> Dramat</label>
+                            <label><input type="checkbox" name="tags" value="Komedia"> Komedia</label>
+                            <label><input type="checkbox" name="tags" value="Akcja"> Akcja</label>
+                            <label><input type="checkbox" name="tags" value="Horror"> Horror</label>
+                        </div>
                         
                         <button type="submit" class="submit-btn">Zapisz w mojej bazie</button>
                     </form>
@@ -114,18 +141,6 @@
             </section>
             <section id="recommendations" class="tab-content">
                 <h2>🤖 Inteligentne Rekomendacje</h2>
-                
-                <div class="filter-box">
-                    <h4>Twoje Preferencje</h4>
-                    <div class="filter-tags">
-                        <label><input type="checkbox" value="Western"> Western</label>
-                        <label><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
-                        <label><input type="checkbox" value="Dramat"> Dramat</label>
-                        <label><input type="checkbox" value="Komedia"> Komedia</label>
-                    </div>
-                    <button class="action-btn" style="margin-top: 10px;">Filtruj bazę</button>
-                </div>
-
                 <div class="ai-assistant">
                     <div class="chat-window" id="chat-window">
                         <p class="bot-msg">Cześć! Jestem Twoim asystentem filmowym. Jakiego filmu szukasz? (np. "Poleć mi western z Clintem Eastwoodem")</p>
@@ -145,7 +160,9 @@
                         
                         <label>Hasło</label>
                         <input type="password" id="login-pass" placeholder="********" required>
-                        
+                        <p style="font-size: 0.7em; color: #888; margin-bottom: 10px;">
+                            Min. 8 znaków, duża litera, cyfra i znak specjalny.
+                        </p>
                         <button type="submit" class="submit-btn">Zaloguj się</button>
                         <p style="margin-top: 15px; font-size: 0.8em; text-align: center;">
                             Nie masz konta? <a href="#" style="color: #e94560;">Zarejestruj się</a>

@@ -38,5 +38,89 @@
     "rating": "10",
     "review": "Świetny film!",
     "visibility": "public"
+  },
+  {
+    "id": 1778079135371,
+    "title": "hangout",
+    "status": "watched",
+    "rating": "10",
+    "review": "super",
+    "visibility": "private",
+    "tags": [
+      "Komedia"
+    ],
+    "owner": "Anonim"
+  },
+  {
+    "id": 1778081463043,
+    "title": "300",
+    "status": "watched",
+    "rating": "7",
+    "review": "tak",
+    "visibility": "public",
+    "tags": [
+      "Komedia"
+    ],
+    "owner": "Kacper"
+  },
+  {
+    "id": 1778082290238,
+    "title": "101 dalmatyńczyków ",
+    "status": "pending",
+    "rating": null,
+    "review": "",
+    "visibility": "private",
+    "tags": [
+      "Komedia"
+    ],
+    "owner": "Kacper"
+  },
+  {
+    "id": 1778082321627,
+    "title": "Egzorcysta",
+    "status": "watched",
+    "rating": "10",
+    "review": "Świetny film!",
+    "visibility": "public",
+    "tags": [
+      "Horror"
+    ],
+    "owner": "Kacper"
+  },
+  {
+    "id": 1778082365255,
+    "title": "Star wars epizod 4",
+    "status": "watched",
+    "rating": "9",
+    "review": "cos",
+    "visibility": "private",
+    "tags": [
+      "Sci-Fi"
+    ],
+    "owner": "Kacper"
+  },
+  {
+    "id": 1778082406418,
+    "title": "Tytanik",
+    "status": "pending",
+    "rating": null,
+    "review": "",
+    "visibility": "private",
+    "tags": [
+      "Dramat"
+    ],
+    "owner": "Kacper"
+  },
+  {
+    "id": 1778082470319,
+    "title": "300",
+    "status": "watched",
+    "rating": "10",
+    "review": "dobra kom",
+    "visibility": "public",
+    "tags": [
+      "Komedia"
+    ],
+    "owner": null
   }
 ]
