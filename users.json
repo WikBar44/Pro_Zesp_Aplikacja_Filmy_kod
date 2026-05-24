@@ -1,6 +1,99 @@
 [
   {
     "username": "Kacper",
-    "password": "App_Check#99"
+    "password": "App_Check#99",
+    "role": "admin",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null,
+    "notifications": []
+  },
+  {
+    "username": "Mod_Robert",
+    "password": "App_Check#99",
+    "role": "moderator",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null,
+    "notifications": []
+  },
+  {
+    "username": "Janusz123",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
+  },
+  {
+    "username": "Patryk ",
+    "password": "App_Check#99",
+    "role": "moderator",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null,
+    "notifications": [
+      "⚠️ Twoje uprawnienia moderatorskie zostały cofnięte przez Administratora.",
+      "🎉 Zostałeś awansowany na Moderatora przez Administratora!",
+      "💚 Twoje ograniczenia zostały zdjęte przez Administratora."
+    ]
+  },
+  {
+    "username": "Kasia",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "muted",
+    "warnings": 1,
+    "mutedUntil": "2026-05-26T18:11:50.108Z",
+    "notifications": []
+  },
+  {
+    "username": "Wiktor",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null,
+    "notifications": []
+  },
+  {
+    "username": "Wiktor123",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
+  },
+  {
+    "username": "Ola",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
+  },
+  {
+    "username": "Ole#99",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
+  },
+  {
+    "username": "Darek",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
+  },
+  {
+    "username": "Darek1",
+    "password": "App_Check#99",
+    "role": "user",
+    "status": "active",
+    "warnings": 0,
+    "mutedUntil": null
   }
 ]

@@ -11,15 +11,19 @@
     <div class="container">
         <header>
             <h1>🎬 CineKeep</h1>
-            <nav class="tabs">
+            <nav class="nav-menu tabs" style="display: none;">
                 <button id="nav-login-btn" class="tab-btn" data-target="login-section">🔑 Logowanie</button>
                 <button id="logout-btn" class="tab-btn" style="display: none;">🚪 Wyloguj</button>
-                <button class="tab-btn active" data-target="home">🏠 Główna</button>
+                <button class="tab-btn" data-target="home">🏠 Główna</button>
                 <button class="tab-btn" data-target="watchlist">🍿 Kolejka</button>
                 <button class="tab-btn" data-target="history">✅ Historia</button>
                 <button class="tab-btn" data-target="community">👥 Społeczność</button>
                 <button class="tab-btn" data-target="add">➕ Dodaj</button>
                 <button class="tab-btn" data-target="recommendations">🤖 Rekomendacje AI</button>
+                <button id="nav-mod-btn" class="tab-btn mod-only-btn" data-target="mod-section" style="display: none;">🛡️ Panel Moderacji</button>
+                <button id="nav-admin-btn" class="tab-btn admin-only-btn" data-target="admin-section" style="display: none;">👑 Panel Admina</button>
+                <button id="nav-apply-mod-btn" class="tab-btn user-only-btn" data-target="apply-mod-section" style="display: none;">📝 Zostań Moderatorem</button>
+                <button class="tab-btn" data-target="rules-section">📜 Regulamin</button>
             </nav>
         </header>
 
@@ -45,6 +49,77 @@
                         <h4>Incepcja</h4>
                         <span class="tag">Thriller</span>
                     </div>
+                </div>
+            </section>
+
+            <section id="mod-section" class="tab-content">
+                <h2>🛡️ Panel Moderacji Społecznościowej</h2>
+                <p>Poniżej znajdują się recenzje zgłoszone przez użytkowników serwisu.</p>
+                <div class="dashboard-box">
+                    <ul id="mod-reports-list" class="report-list">
+                        <p class="empty-info">Brak aktywnych zgłoszeń w kolejce.</p>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="admin-section" class="tab-content">
+                <h2>👑 Główny Panel Administracyjny</h2>
+                <div class="admin-grid">
+                    <div class="admin-col">
+                        <h3>⚠️ Zawieszone konta (3 ostrzeżenia)</h3>
+                        <ul id="admin-suspended-list" class="report-list">
+                            <p class="empty-info">Brak kont oczekujących na decyzję.</p>
+                        </ul>
+                    </div>
+                    <div class="admin-col">
+                        <h3>✉️ Odwołania i Podania na Moderatora</h3>
+                        <ul id="admin-appeals-list" class="report-list">
+                            <p class="empty-info">Brak nowych wiadomości.</p>
+                        </ul>
+                    </div>
+                </div>
+                <div class="admin-card search-user-box" style="margin-top: 20px; padding: 20px; background: #1a1a2e; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <h3>🔍 Zaawansowane Zarządzanie Użytkownikami</h3>
+                    <p style="font-size: 0.9em; opacity: 0.7; margin-bottom: 15px;">Wyszukaj profil użytkownika, aby zarządzać jego rangą, nałożyć karę, nadać ostrzeżenie lub sprawdzić statystyki aktywności.</p>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="search-username-input" placeholder="Wpisz dokładny login użytkownika..." style="flex: 1; padding: 10px; border: 1px solid rgba(255,255,255,0.1); background: #161624; color: #fff; border-radius: 4px; font-size: 0.95em;">
+                        <button id="btn-search-user" class="admin-search-btn" style="background: #e94560; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;">Szukaj konta</button>
+                    </div>
+
+                    <div id="search-user-result" style="display: none; background: #161624; padding: 15px; border-radius: 6px; border-left: 4px solid #ff9f43; margin-top: 15px;">
+                        </div>
+                </div>
+                <div class="admin-card logs-box" style="margin-top: 20px; padding: 20px; background: #1a1a2e; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">📋 Dziennik Akcji Administracyjnych (Logi)</h3>
+                        <button onclick="loadAdminLogs()" class="admin-refresh-btn" style="background: #00b4d8; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; font-weight: bold; transition: 0.3s;">🔄 Odśwież logi</button>
+                    </div>
+                    <p style="font-size: 0.9em; opacity: 0.7; margin-bottom: 10px;">Historia działań podjętych przez Moderatorów oraz Administratorów systemu w czasie rzeczywistym.</p>
+                    
+                    <div id="admin-logs-list" style="max-height: 250px; overflow-y: auto; background: #161624; padding: 15px; border-radius: 6px; border-left: 4px solid #00b4d8; font-family: monospace; font-size: 0.9em; color: #e0e0e0;">
+                        <p class="empty-info" style="color: #888; margin: 0;">Kliknij "Odśwież logi", aby załadować historię działań.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="apply-mod-section" class="tab-content">
+                <h2>📝 Rekrutacja na Moderatora Społeczności</h2>
+                <div class="form-box">
+                    <p>Napisz krótko, dlaczego to Ty powinieneś dbać o porządek w CineKeep:</p>
+                    <textarea id="mod-apply-text" placeholder="Moje uzasadnienie..." rows="5" required></textarea>
+                    <button id="btn-submit-mod-apply" class="submit-btn" style="margin-top: 10px;">Wyślij podanie</button>
+                </div>
+            </section>
+
+            <section id="muted-warning-section" class="tab-content">
+                <div class="form-box" style="border: 2px solid #e94560; background: rgba(233,69,96,0.1);">
+                    <h2 style="color: #e94560;">⚠️ Twoje konto posiada ograniczenia!</h2>
+                    <p id="mute-info-text">Zostałeś wyciszony za złamanie regulaminu.</p>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+                    <h3>Uważasz, że to pomyłka? Wyślij odwołanie:</h3>
+                    <textarea id="appeal-text" placeholder="Napisz odwołanie do administracji..." rows="4"></textarea>
+                    <button id="btn-submit-appeal" class="submit-btn" style="background: #e94560; margin-top: 10px;">Wyślij odwołanie</button>
                 </div>
             </section>
 
@@ -93,19 +168,23 @@
                 <ul class="movie-list" id="watched-list"></ul>
             </section>
 
-            <section id="community" class="tab-content">
-                <h2>💬 Recenzje Społeczności</h2>
-                <p style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Oto co ostatnio oglądali inni użytkownicy CineKeep:</p>
-                <div id="community-reviews" class="reviews-grid">
-                    </div>
-            </section>
-
             <section id="add" class="tab-content">
-                <h2>Dodaj nowy film</h2>
+                <h2>Dodaj nowy tytuł</h2>
                 <div class="form-box">
                     <form id="movie-form">
-                        <label>Tytuł filmu</label>
+                        <label>Tytuł produkcji</label>
                         <input type="text" id="movie-title" placeholder="np. Diuna" required>
+                        
+                        <label>Typ produkcji</label>
+                        <select id="movie-type" onchange="toggleTvShowFields()" style="width: 100%; padding: 10px; background: #161624; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 15px;">
+                            <option value="movie">🎬 Film</option>
+                            <option value="tvshow">📺 Serial</option>
+                        </select>
+
+                        <div id="tvshow-fields" style="display: none; margin-bottom: 15px;">
+                            <label>Numer Sezonu (Wpisz samą cyfrę)</label>
+                            <input type="number" id="movie-season" min="1" max="100" placeholder="np. 3" style="width: 100%; padding: 10px; background: #161624; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+                        </div>
                         
                         <label>Status</label>
                         <select id="movie-status" onchange="toggleReviewFields()">
@@ -126,7 +205,8 @@
                                 <option value="public">🌍 Publiczna (dla wszystkich)</option>
                             </select>
                         </div>
-                        <label>Tagi (wybierz kilka):</label>
+
+                        <label style="margin-top: 15px; display: block;">Tagi (wybierz kilka):</label>
                         <div class="tag-selection">
                             <label><input type="checkbox" name="tags" value="Sci-Fi"> Sci-Fi</label>
                             <label><input type="checkbox" name="tags" value="Dramat"> Dramat</label>
@@ -138,6 +218,19 @@
                         <button type="submit" class="submit-btn">Zapisz w mojej bazie</button>
                     </form>
                 </div>
+            </section>
+
+            <section id="community" class="tab-content">
+                <h2>💬 Recenzje Społeczności</h2>
+                <p style="font-size: 0.9em; opacity: 0.7; margin-bottom: 20px;">Oto co ostatnio oglądali inni użytkownicy CineKeep:</p>
+                
+                <div class="community-filters" style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: flex-start;">
+                    <button onclick="filterCommunityType('all')" id="comm-filter-all" style="padding: 8px 16px; background: #e94560; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">✨ Wszystko</button>
+                    <button onclick="filterCommunityType('movie')" id="comm-filter-movie" style="padding: 8px 16px; background: #1a1a2e; color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; font-weight: bold; cursor: pointer;">🎬 Filmy</button>
+                    <button onclick="filterCommunityType('tvshow')" id="comm-filter-tvshow" style="padding: 8px 16px; background: #1a1a2e; color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; font-weight: bold; cursor: pointer;">📺 Seriale</button>
+                </div>
+
+                <div id="community-reviews" class="reviews-grid"></div>
             </section>
             <section id="recommendations" class="tab-content">
                 <h2>🤖 Inteligentne Rekomendacje</h2>
@@ -152,22 +245,132 @@
                 </div>
             </section>
             <section id="login-section" class="tab-content">
-                <h2>Zaloguj się do CineKeep</h2>
-                <div class="form-box">
+                <div id="login-box" class="auth-container" style="max-width: 450px; margin: 40px auto; padding: 30px; background: #1a1a2e; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <h2 style="margin-top: 0; margin-bottom: 20px; text-align: center; color: #fff;">Zaloguj się do CineKeep</h2>
+                    
                     <form id="login-form">
-                        <label>Nazwa użytkownika</label>
-                        <input type="text" id="login-user" placeholder="Twój login" required>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #ddd; font-size: 0.9em;">Nazwa użytkownika</label>
+                            <input type="text" id="login-user" required style="width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #161624; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                        </div>
                         
-                        <label>Hasło</label>
-                        <input type="password" id="login-pass" placeholder="********" required>
-                        <p style="font-size: 0.7em; color: #888; margin-bottom: 10px;">
-                            Min. 8 znaków, duża litera, cyfra i znak specjalny.
-                        </p>
-                        <button type="submit" class="submit-btn">Zaloguj się</button>
-                        <p style="margin-top: 15px; font-size: 0.8em; text-align: center;">
-                            Nie masz konta? <a href="#" style="color: #e94560;">Zarejestruj się</a>
-                        </p>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 5px; color: #ddd; font-size: 0.9em;">Hasło</label>
+                            <input type="password" id="login-pass" required style="width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #161624; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                        </div>
+                        
+                        <button type="submit" style="width: 100%; padding: 12px; background: #e94560; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1em; transition: 0.3s; margin-bottom: 15px;">Zaloguj się</button>
                     </form>
+                    
+                    <p style="text-align: center; margin: 0; font-size: 0.9em; color: #bbb;">
+                        Nie masz konta? <a href="#" onclick="toggleAuthViews('register')" style="color: #e94560; text-decoration: none; font-weight: bold;">Zarejestruj się</a>
+                    </p>
+                </div>
+
+                <div id="register-box" class="auth-container" style="display: none; max-width: 450px; margin: 40px auto; padding: 30px; background: #1a1a2e; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <h2 style="margin-top: 0; margin-bottom: 20px; text-align: center; color: #fff;">Załóż darmowe konto</h2>
+                    
+                    <form id="register-form">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #ddd; font-size: 0.9em;">Wybierz login (Nazwa użytkownika)</label>
+                            <input type="text" id="reg-user" required style="width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #161624; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <label style="display: block; margin-bottom: 5px; color: #ddd; font-size: 0.9em;">Utwórz silne hasło</label>
+                            <input type="password" id="reg-pass" required style="width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: #161624; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                            <small style="display: block; color: #888; font-size: 0.75em; margin-top: 5px; line-height: 1.3em;">Wymagania: minimum 8 znaków, jedna wielka litera, jedna cyfra oraz jeden znak specjalny.</small>
+                        </div>
+
+                        <div style="margin-bottom: 15px; margin-top: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #ddd; font-size: 0.9em; text-align: left;">Regulamin aplikacji</label>
+                            <div style="background: #161624; color: #bbb; padding: 15px; border-radius: 4px; font-size: 0.85em; max-height: 150px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); line-height: 1.5em; text-align: left; margin-bottom: 10px; box-sizing: border-box;">
+                                <strong style="color: #fff;">📜 REGULAMIN SERWISU CINEKEEP</strong><br>
+                                <span style="font-size: 0.8em; opacity: 0.7;">Wersja obowiązująca od: 24.05.2026 r.</span><br><br>
+                                
+                                <strong>§1. Postanowienia Ogólne</strong><br>
+                                1. Serwis CineKeep służy do prowadzenia osobistej biblioteki filmów oraz seriali, oceniania produkcji, pisania recenzji oraz dzielenia się opiniami w sekcji Społeczność.<br>
+                                2. Rejestracja w serwisie jest całkowicie darmowa i dobrowolna.<br>
+                                3. Każdy użytkownik może posiadać tylko jedno konto w aplikacji.<br><br>
+                                
+                                <strong>§2. Zasady Korzystania i Publikacji Treści</strong><br>
+                                1. Użytkownik ma prawo do publikowania własnych ocen i recenzji pod warunkiem, że nie naruszają one polskiego prawa oraz norm społecznych.<br>
+                                2. W sekcji Społeczność kategorycznie zabrania się:<br>
+                                &nbsp;&nbsp;&bull; Używania wulgaryzmów, słów powszechnie uznanych za obraźliwe oraz szerzenia mowy nienawiści.<br>
+                                &nbsp;&nbsp;&bull; Obrażania innych użytkowników oraz członków administracji (Moderatorów i Administratora).<br>
+                                &nbsp;&nbsp;&bull; Publikowania spamu, reklam, linków zewnętrznych oraz treści niezwiązanych z tematyką filmową.<br>
+                                &nbsp;&nbsp;&bull; Celowego zdradzania kluczowych zwrotów akcji (tzw. spoilerów) bez wyraźnego ostrzeżenia innych w treści recenzji.<br><br>
+                                
+                                <strong>§3. System Kar i Moderacja (Zasada 3 Ostrzeżeń)</strong><br>
+                                1. Nad porządkiem w aplikacji czuwają Moderatorzy oraz Administrator.<br>
+                                2. W przypadku złamania zasad określonych w §2, Moderator ma prawo do natychmiastowego ukrycia recenzji oraz nałożenia na użytkownika Ostrzeżenia (+1 Warning).<br>
+                                3. Konsekwencje posiadania ostrzeżeń:<br>
+                                &nbsp;&nbsp;&bull; 1 lub 2 Ostrzeżenia: Skutkują automatycznym nałożeniem statusu MUTED (wyciszony) na okres 3 dni. W tym czasie użytkownik może przeglądać aplikację, ale nie może dodawać nowych filmów ani publicznych recenzji.<br>
+                                &nbsp;&nbsp;&bull; 3 Ostrzeżenia: Skutkują automatycznym zablokowaniem konta i nadaniem statusu SUSPENDED (zawieszony). Sprawa użytkownika trafia do Głównego Panelu Administracyjnego.<br>
+                                4. Ostateczną decyzję o nałożeniu permanentnej blokady (BAN) lub przywróceniu konta podejmuje wyłącznie Administrator.<br><br>
+                                
+                                <strong>§4. Procedura Odwoławcza</strong><br>
+                                1. Użytkownik, który nie zgadza się z decyzją Moderatora i otrzymał karę, ma prawo do złożenia jednego oficjalnego Odwołania za pośrednictwem dedykowanego formularza na ekranie blokady.<br>
+                                2. Odwołanie trafia bezpośrednio do weryfikacji przez Administratora. Decyzja Administratora po rozpatrzeniu odwołania jest ostateczna.
+                            </div>
+                            
+                            <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; color: #bbb; font-size: 0.85em; text-align: left;">
+                                <input type="checkbox" id="reg-accept" style="margin: 3px 0 0 0; width: auto; cursor: pointer;">
+                                <label for="reg-accept" style="cursor: pointer; line-height: 1.4em; display: inline;">Oświadczam, że zapoznałem/am się z regulaminem i akceptuję jego postanowienia.</label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" style="width: 100%; padding: 12px; background: #4e9f3d; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1em; transition: 0.3s; margin-bottom: 15px;">Stwórz nowe konto</button>
+                    </form>
+                    
+                    <p style="text-align: center; margin: 0; font-size: 0.9em; color: #bbb;">
+                        Masz już konto? <a href="#" onclick="toggleAuthViews('login')" style="color: #00b4d8; text-decoration: none; font-weight: bold;">Wróć do logowania</a>
+                    </p>
+                </div>
+            </section>
+            <section id="rules-section" class="tab-content">
+                <h2>📜 Regulamin Aplikacji CineKeep</h2>
+                <div style="background: #1a1a2e; padding: 30px; border-radius: 8px; max-width: 800px; margin: 0 auto; text-align: left; line-height: 1.6em; color: #ddd; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <p style="font-size: 0.85em; opacity: 0.6; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 20px;">Wersja obowiązująca od: 24.05.2026 r.</p>
+                    
+                    <h3 style="color: #ff9f43; margin-top: 20px;">§1. Postanowienia Ogólne</h3>
+                    <ol>
+                        <li>Serwis <strong>CineKeep</strong> służy do prowadzenia osobistej biblioteki filmów oraz seriali, oceniania produkcji, pisania recenzji oraz dzielenia się opiniami w sekcji Społeczność.</li>
+                        <li>Rejestracja w serwisie jest całkowicie darmowa i dobrowolna.</li>
+                        <li>Każdy użytkownik może posiadać tylko jedno konto w aplikacji.</li>
+                    </ol>
+                    
+                    <h3 style="color: #ff9f43; margin-top: 25px;">§2. Zasady Korzystania i Publikacji Treści</h3>
+                    <ol>
+                        <li>Użytkownik ma prawo do publikowania własnych ocen i recenzji pod warunkiem, że nie naruszają one polskiego prawa oraz norm społecznych.</li>
+                        <li>W sekcji <strong>Społeczność</strong> kategorycznie zabrania się:
+                            <ul style="list-style-type: square; padding-left: 20px; margin-top: 5px;">
+                                <li>Używania wulgaryzmów, słów powszechnie uznanych za obraźliwe oraz szerzenia mowy nienawiści.</li>
+                                <li>Obrażania innych użytkowników oraz członków administracji (Moderatorów i Administratora).</li>
+                                <li>Publikowania spamu, reklam, linków zewnętrznych oraz treści niezwiązanych z tematyką filmową.</li>
+                                <li>Celowego zdradzania kluczowych zwrotów akcji (tzw. <em>spoilów</em>) bez wyraźnego ostrzeżenia innych w treści recenzji.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <h3 style="color: #ff9f43; margin-top: 25px;">§3. System Kar i Moderacja (Zasada 3 Ostrzeżeń)</h3>
+                    <ol>
+                        <li>Nad porządkiem w aplikacji czuwają <strong>Moderatorzy</strong> oraz <strong>Administrator</strong>.</li>
+                        <li>W przypadku złamania zasad określonych w §2, Moderator ma prawo do natychmiastowego ukrycia recenzji oraz nałożenia na użytkownika <strong>Ostrzeżenia (+1 Warning)</strong>.</li>
+                        <li>Konsekwencje posiadania ostrzeżeń:
+                            <ul style="list-style-type: square; padding-left: 20px; margin-top: 5px;">
+                                <li><strong style="color: #ff9f43;">1 lub 2 Ostrzeżenia:</strong> Skutkują automatycznym nałożeniem statusu <code>MUTED</code> (wyciszony) na okres <strong>3 dni</strong>. W tym czasie użytkownik może przeglądać aplikację, ale nie może dodawać nowych filmów ani publicznych recenzji.</li>
+                                <li><strong style="color: #e94560;">3 Ostrzeżenia:</strong> Skutkują automatycznym zablokowaniem konta i nadaniem statusu <code>SUSPENDED</code> (zawieszony). Sprawa użytkownika trafia do Głównego Panelu Administracyjnego.</li>
+                            </ul>
+                        </li>
+                        <li>Ostateczną decyzję o nałożeniu permanentnej blokady (<strong>BAN</strong>) lub przywróceniu konta podejmuje wyłącznie <strong>Administrator</strong>.</li>
+                    </ol>
+                    
+                    <h3 style="color: #ff9f43; margin-top: 25px;">§4. Procedura Odwoławcza</h3>
+                    <ol>
+                        <li>Użytkownik, który nie zgadza się z decyzją Moderatora i otrzymał karę, ma prawo do złożenia jednego oficjalnego <strong>Odwołania</strong> za pośrednictwem dedykowanego formularza na ekranie blokady.</li>
+                        <li>Odwołanie trafia bezpośrednio do weryfikacji przez Administratora. Decyzja Administratora po rozpatrzeniu odwołania jest ostateczna.</li>
+                    </ol>
                 </div>
             </section>
         </main>

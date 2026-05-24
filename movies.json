@@ -21,7 +21,7 @@
     "status": "watched",
     "rating": "8",
     "review": "dobry ",
-    "visibility": "public"
+    "visibility": "private"
   },
   {
     "id": 1776871073748,
@@ -37,7 +37,7 @@
     "status": "watched",
     "rating": "10",
     "review": "Świetny film!",
-    "visibility": "public"
+    "visibility": "private"
   },
   {
     "id": 1778079135371,
@@ -57,7 +57,7 @@
     "status": "watched",
     "rating": "7",
     "review": "tak",
-    "visibility": "public",
+    "visibility": "private",
     "tags": [
       "Komedia"
     ],
@@ -72,18 +72,6 @@
     "visibility": "private",
     "tags": [
       "Komedia"
-    ],
-    "owner": "Kacper"
-  },
-  {
-    "id": 1778082321627,
-    "title": "Egzorcysta",
-    "status": "watched",
-    "rating": "10",
-    "review": "Świetny film!",
-    "visibility": "public",
-    "tags": [
-      "Horror"
     ],
     "owner": "Kacper"
   },
@@ -117,10 +105,191 @@
     "status": "watched",
     "rating": "10",
     "review": "dobra kom",
-    "visibility": "public",
+    "visibility": "private",
     "tags": [
       "Komedia"
     ],
     "owner": null
+  },
+  {
+    "id": 1779368581077,
+    "title": "Norymberga ",
+    "status": "watched",
+    "tags": [
+      "Dramat"
+    ],
+    "rating": "1",
+    "review": "okropny film ",
+    "visibility": "private",
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779368619674,
+    "title": "Diuna",
+    "status": "watched",
+    "tags": [
+      "Sci-Fi",
+      "Akcja"
+    ],
+    "rating": "1",
+    "review": "okropny film ",
+    "visibility": "private",
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779372101428,
+    "title": "300",
+    "status": "watched",
+    "tags": [
+      "Akcja"
+    ],
+    "rating": "1",
+    "review": "tak",
+    "visibility": "private",
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779372757460,
+    "title": "300",
+    "status": "watched",
+    "tags": [
+      "Sci-Fi"
+    ],
+    "rating": "1",
+    "review": "2dsdsd",
+    "visibility": "private",
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779372859950,
+    "title": "101 dalmatyńczyków ",
+    "status": "watched",
+    "tags": [
+      "Dramat"
+    ],
+    "rating": "1",
+    "review": "ffdfd",
+    "visibility": "private",
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779374083322,
+    "title": "300",
+    "status": "watched",
+    "rating": "1",
+    "review": "admin pls unban",
+    "visibility": "private",
+    "tags": [
+      "Dramat"
+    ],
+    "owner": "Wiktor"
+  },
+  {
+    "id": 1779374215982,
+    "title": "Tytanik",
+    "status": "watched",
+    "rating": "2",
+    "review": "test",
+    "visibility": "private",
+    "tags": [
+      "Dramat"
+    ],
+    "owner": "Mod_Robert"
+  },
+  {
+    "id": 1779559161414,
+    "title": "Tytanik",
+    "status": "watched",
+    "rating": "2",
+    "review": "wulgaryzm!",
+    "visibility": "private",
+    "tags": [
+      "Dramat"
+    ],
+    "owner": "Kasia"
+  },
+  {
+    "id": 1779642513897,
+    "title": "Peaky Blinders",
+    "status": "watched",
+    "rating": "9",
+    "review": "dobrze sie zaczyna ",
+    "visibility": "public",
+    "tags": [
+      "Akcja"
+    ],
+    "owner": "Kacper",
+    "type": "tvshow",
+    "season": "1"
+  },
+  {
+    "id": 1779642570702,
+    "title": "Peaky Blinders",
+    "status": "watched",
+    "rating": "9",
+    "review": "Peak",
+    "visibility": "public",
+    "tags": [
+      "Akcja"
+    ],
+    "owner": "Kacper",
+    "type": "tvshow",
+    "season": "2"
+  },
+  {
+    "id": 1779642611967,
+    "title": "Norymberga ",
+    "status": "watched",
+    "rating": "10",
+    "review": "bardzo dobry film",
+    "visibility": "public",
+    "tags": [
+      "Dramat"
+    ],
+    "owner": "Kacper",
+    "type": "movie",
+    "season": ""
+  },
+  {
+    "id": 1779642692361,
+    "title": "Peaky Blinders",
+    "status": "watched",
+    "rating": "9",
+    "review": "lekko gorszy od 2 sezonu ",
+    "visibility": "public",
+    "tags": [
+      "Akcja"
+    ],
+    "owner": "Kacper",
+    "type": "tvshow",
+    "season": "Sezon 3 "
+  },
+  {
+    "id": 1779643222558,
+    "title": "the boys",
+    "status": "watched",
+    "rating": "10",
+    "review": "git",
+    "visibility": "public",
+    "tags": [
+      "Akcja"
+    ],
+    "owner": "Kacper",
+    "type": "tvshow",
+    "season": "Sezon 2"
+  },
+  {
+    "id": 1779643442030,
+    "title": "the boys",
+    "status": "watched",
+    "rating": "1",
+    "review": "xd",
+    "visibility": "public",
+    "tags": [
+      "Akcja"
+    ],
+    "owner": "Wiktor",
+    "type": "tvshow",
+    "season": "Sezon 1"
   }
 ]
