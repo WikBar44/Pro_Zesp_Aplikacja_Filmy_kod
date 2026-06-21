@@ -8,7 +8,6 @@ const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'movies.json');
 const REPORTS_FILE = path.join(__dirname, 'reports.json');
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
@@ -32,18 +31,18 @@ const readReports = () => {
     return JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8') || "[]");
 };
 
-// FUNKCJA POMOCNICZA: Zapis danych do pliku
+// Zapis danych do pliku
 const writeMovies = (movies) => {
     fs.writeFileSync(DATA_FILE, JSON.stringify(movies, null, 2));
 };
 
-// ENDPOINT: Pobieranie wszystkich filmów (GET)
+// Pobieranie wszystkich filmów 
 app.get('/api/movies', (req, res) => {
     const movies = readMovies();
     res.json(movies);
 });
 
-// ENDPOINT: Dodawanie nowego filmu (POST) - Zaktualizowany z obsługą typów
+// Dodawanie nowego filmu
 app.post('/api/movies', (req, res) => {
     const movies = readMovies();
     const users = readUsers();
@@ -51,17 +50,16 @@ app.post('/api/movies', (req, res) => {
 
     const userRecord = users.find(u => u.username === movieData.owner);
 
-    // ZABEZPIECZENIE (Sprawa 6): Jeśli użytkownik ma status muted/suspended, wymuszamy visibility "private"
+    // ZABEZPIECZENIE: Jeśli użytkownik ma status muted/suspended
     if (userRecord && (userRecord.status === 'muted' || userRecord.status === 'suspended')) {
         movieData.visibility = "private";
     }
 
-    // NOWOŚĆ: Upewniamy się, że pola typu i sezonu są prawidłowo sformatowane przed zapisem
-    movieData.type = movieData.type || "movie"; // Jeśli brak typu, ustaw jako film
+    movieData.type = movieData.type || "movie";
     if (movieData.type === 'movie') {
-        movieData.season = ""; // Filmy nie mają sezonów
+        movieData.season = "";
     } else if (movieData.type === 'tvshow' && !movieData.season) {
-        movieData.season = "Sezon 1"; // Domyślny sezon dla serialu, jeśli użytkownik nic nie wpisał
+        movieData.season = "Sezon 1";
     }
 
     movies.push(movieData);
@@ -69,7 +67,7 @@ app.post('/api/movies', (req, res) => {
     res.status(201).json({ message: 'Film dodany!', movie: movieData });
 });
 
-// ENDPOINT: Aktualizacja całej listy
+// Aktualizacja całej listy
 app.post('/api/movies/update', (req, res) => {
     const updatedMovies = req.body;
     writeMovies(updatedMovies);    
@@ -82,13 +80,12 @@ const readUsers = () => {
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
 };
 
-// 1. ENDPOINT: Usuwanie konkretnego filmu z biblioteki
+// Usuwanie konkretnego filmu z biblioteki
 app.delete('/api/movies/:id', (req, res) => {
-    const movieId = req.params.id; // Zdejmujemy parseInt
+    const movieId = req.params.id;
     let movies = readMovies();
 
     const initialLength = movies.length;
-    // Filtrujemy za pomocą "==", eliminując problem typu string/number
     movies = movies.filter(m => m.id != movieId);
 
     if (movies.length === initialLength) {
@@ -99,20 +96,19 @@ app.delete('/api/movies/:id', (req, res) => {
     res.json({ message: "Film został pomyślnie usunięty z Twojej biblioteki." });
 });
 
-// 2. ENDPOINT: Edycja samej oceny i treści recenzji filmu
+// Edycja  oceny i treści recenzji filmu
 app.put('/api/movies/:id', (req, res) => {
-    const movieId = req.params.id; // Zdejmujemy parseInt, porównamy luźno za pomocą ==
+    const movieId = req.params.id;
     const { rating, review } = req.body;
     let movies = readMovies();
 
     let found = false;
     movies = movies.map(m => {
-        // Używamy "==", aby dopasować liczbę do tekstu w razie niespójności typów
         if (m.id == movieId) {
             found = true;
             return { 
                 ...m, 
-                rating: parseInt(rating) || m.rating, // Zabezpieczenie wartości oceny
+                rating: parseInt(rating) || m.rating,
                 review: review 
             };
         }
@@ -137,13 +133,12 @@ app.post('/api/register', (req, res) => {
         return res.status(400).json({ message: "Ta nazwa użytkownika jest już zajęta!" });
     }
 
-    // Walidacja hasła (Regex)
+    // Walidacja hasła
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!passwordRegex.test(password)) {
         return res.status(400).json({ message: "Hasło nie spełnia wymogów bezpieczeństwa." });
     }
 
-    // Tworzenie rozbudowanego obiektu użytkownika
     const newUser = {
         username,
         password,
@@ -169,12 +164,10 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ message: "Błędne dane logowania" });
     }
 
-    // Jeśli użytkownik ma bana od Admina
     if (user.status === 'banned') {
         return res.status(403).json({ message: "Twoje konto zostało permanentnie zablokowane przez Administratora." });
     }
 
-    // Zwracamy pełne informacje potrzebne dla frontendu
     res.json({ 
         message: "Zalogowano", 
         username: user.username, 
@@ -184,9 +177,10 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// =================================================================
-// SYSTEM ADMINISTRACJI I MODERACJI (CineKeep)
-// =================================================================
+// ================================================
+// SYSTEM ADMINISTRACJI I MODERACJI 
+// ================================================
+
 const LOGS_FILE = path.join(__dirname, 'logs.json');
 
 const writeLog = (actionText) => {
@@ -198,7 +192,6 @@ const writeLog = (actionText) => {
                 logs = JSON.parse(data);
             }
         }
-        // Dodajemy nowy wpis na początek listy
         logs.unshift({
             id: Date.now(),
             date: new Date().toLocaleString('pl-PL'),
@@ -210,7 +203,7 @@ const writeLog = (actionText) => {
     }
 };
 
-// 1. ZWYKŁY UŻYTKOWNIK: Zgłaszanie recenzji/komentarza
+// ZWYKŁY UŻYTKOWNIK: Zgłaszanie recenzji/komentarza
 app.post('/api/reports/add', (req, res) => {
     const { commentId, reportedUser, reason, reportedBy } = req.body;
     const reports = readReports();
@@ -230,14 +223,14 @@ app.post('/api/reports/add', (req, res) => {
     res.status(201).json({ message: "Zgłoszenie zostało wysłane do moderacji." });
 });
 
-// 2. MODERATOR: Pobranie otwartych zgłoszeń
+// MODERATOR: Pobranie zgłoszeń
 app.get('/api/moderator/reports', (req, res) => {
     const reports = readReports();
     const pendingReports = reports.filter(r => r.status === "pending" && r.type === "comment_report");
     res.json(pendingReports);
 });
 
-// 3. MODERATOR: Akcja na zgłoszeniu
+// MODERATOR: Akcja na zgłoszeniu
 app.post('/api/moderator/execute', (req, res) => {
     const { reportId, action, targetUser, commentId, executerUser } = req.body;
     let reports = readReports();
@@ -247,7 +240,7 @@ app.post('/api/moderator/execute', (req, res) => {
     const account = users.find(u => u.username === targetUser);
     const executer = users.find(u => u.username === executerUser);
     
-    // Obsługa nałożenia kary (Ostrzeżenia)
+    // Obsługa nałożenia kary
     if (action === 'warn' && account) {
         if (account.role === 'admin' || (account.role === 'moderator' && executer?.role !== 'admin')) {
             return res.status(403).json({ message: "Błąd: Nie masz uprawnień do ukarania tego członka administracji!" });
@@ -257,7 +250,7 @@ app.post('/api/moderator/execute', (req, res) => {
         movies = movies.map(m => m.owner === targetUser ? { ...m, visibility: "private" } : m);
         writeMovies(movies);
 
-        // NALICZANIE KAR:
+        // NALICZANIE KAR
         users = users.map(u => {
             if (u.username === targetUser) {
                 const newWarnings = (u.warnings || 0) + 1;
@@ -286,7 +279,6 @@ app.post('/api/moderator/execute', (req, res) => {
         fs.writeFileSync(REPORTS_FILE, JSON.stringify(reports, null, 2));
     }
 
-    // DYNAMICZNE GENEROWANIE LOGÓW
     let logMessage = "";
     
     if (action === 'warn') {
@@ -307,7 +299,7 @@ app.post('/api/moderator/execute', (req, res) => {
     res.json({ message: "Akcja wykonana pomyślnie. Zmiany zapisano w bazie." });
 });
 
-// 4. UŻYTKOWNIK: Odwołanie od kary
+// UŻYTKOWNIK: Odwołanie od kary
 app.post('/api/reports/appeal', (req, res) => {
     const { username, reason } = req.body;
     const reports = readReports();
@@ -325,14 +317,13 @@ app.post('/api/reports/appeal', (req, res) => {
     res.json({ message: "Odwołanie zostało wysłane do Administratora." });
 });
 
-// 5. ADMIN: Pobranie wszystkich spraw (Zawieszenia, Odwołania i Podania)
+// ADMIN: Pobranie wszystkich spraw, Zawieszenia, Odwołania i Podania
 app.get('/api/admin/dashboard', (req, res) => {
     const users = readUsers();
     const reports = readReports();
 
     const suspendedUsers = users.filter(u => u.status === 'suspended');
     
-    // NAPRAWA: Filtrujemy zgłoszenia, które mają status pending ORAZ są odwołaniem LUB podaniem na moda
     const appeals = reports.filter(r => 
         (r.type === 'appeal' || r.type === 'mod_application') && r.status === 'pending'
     );
@@ -340,14 +331,12 @@ app.get('/api/admin/dashboard', (req, res) => {
     res.json({ suspendedUsers, appeals });
 });
 
-// 6. ADMIN: Ostateczna decyzja (Ban lub Przywrócenie konta)
-// Zastąp endpoint app.post('/api/admin/decision', ...) w server.js:
+// ADMIN: decyzje
 app.post('/api/admin/decision', (req, res) => {
     const { targetUser, decision, reportId } = req.body;
     let users = readUsers();
     let reports = readReports();
 
-    // Szukamy oryginalnej sprawy, żeby wiedzieć czy to było podanie czy odwołanie
     const currentReport = reports.find(r => r.id === reportId);
 
     if (reportId) {
@@ -365,14 +354,12 @@ app.post('/api/admin/decision', (req, res) => {
                 userNotifications.push(`🎉 Zostałeś awansowany na Moderatora przez Administratora!`);
                 return { ...u, role: 'moderator', notifications: userNotifications };
             } else if (decision === 'demote_user') {
-                // NOWOŚĆ: Degradacja moderatora do zwykłego użytkownika
                 userNotifications.push(`⚠️ Twoje uprawnienia moderatorskie zostały cofnięte przez Administratora.`);
                 return { ...u, role: 'user', notifications: userNotifications };
             } else if (decision === 'unban') {
                 userNotifications.push(`💚 Twoje ograniczenia zostały zdjęte przez Administratora.`);
                 return { ...u, status: 'active', warnings: 0, mutedUntil: null, notifications: userNotifications };
             } else if (decision === 'dismiss') {
-                // POWIADOMIENIE O ODRZUCENIU (Sprawa 3)
             if (currentReport && currentReport.type === 'mod_application') {
                 userNotifications.push(`❌ Twoje podanie o zostanie Moderatorem zostało odrzucone przez Administratora.`);
             } else if (currentReport && currentReport.type === 'appeal') {
@@ -388,7 +375,6 @@ app.post('/api/admin/decision', (req, res) => {
     res.json({ message: "Decyzja została zapisana, a użytkownik powiadomiony." });
 });
 
-// DODATKOWY ENDPOINT DO CZYSZCZENIA POWIADOMIEŃ
 app.post('/api/users/clear-notifications', (req, res) => {
     const { username } = req.body;
     let users = readUsers();
@@ -397,7 +383,7 @@ app.post('/api/users/clear-notifications', (req, res) => {
     res.json({ message: "Wyczyszczono" });
 });
 
-// ENDPOINT: Pobieranie logów audytowych dla Administratora
+// Pobieranie logów  dla Administratora
 app.get('/api/admin/logs', (req, res) => {
     if (!fs.existsSync(LOGS_FILE)) return res.json([]);
     try {
@@ -408,21 +394,19 @@ app.get('/api/admin/logs', (req, res) => {
     }
 });
 
-// ENDPOINT: Wyszukiwanie częściowe (Zaktualizowane w server.js)
+// Wyszukiwanie częściowe 
 app.get('/api/admin/search-user/:username', (req, res) => {
     const users = readUsers();
     const movies = readMovies();
     
     const query = req.params.username.toLowerCase();
     
-    // Szukamy WSZYSTKICH użytkowników, którzy zawierają wpisaną frazę
     const matchedUsers = users.filter(u => u.username.toLowerCase().includes(query));
     
     if (matchedUsers.length === 0) {
         return res.status(404).json({ message: "Nie znaleziono użytkowników pasujących do wpisanej frazy." });
     }
     
-    // Jeśli znaleziono dokładnie jednego użytkownika, zwracamy jego pełne dane (jak wcześniej)
     if (matchedUsers.length === 1) {
         const user = matchedUsers[0];
         const userMoviesCount = movies.filter(m => m.owner === user.username).length;
@@ -440,7 +424,6 @@ app.get('/api/admin/search-user/:username', (req, res) => {
         });
     }
     
-    // Jeśli znaleziono wielu użytkowników, zwracamy ich listę (tylko loginy i rangi)
     const list = matchedUsers.map(u => ({ username: u.username, role: u.role }));
     res.json({
         type: "list",
@@ -448,7 +431,7 @@ app.get('/api/admin/search-user/:username', (req, res) => {
     });
 });
 
-// 7. PODANIE NA MODERATORA: Wysłanie prośby (Poprawione w server.js)
+// PODANIE NA MODERATORA
 app.post('/api/moderator/apply', (req, res) => {
     const { username, reportedUser, text } = req.body;
     const reports = readReports();
@@ -456,7 +439,7 @@ app.post('/api/moderator/apply', (req, res) => {
     reports.push({
         id: Date.now(),
         type: "mod_application",
-        reportedUser: reportedUser || username, // Przyjmie każdą formę przesłaną z frontu
+        reportedUser: reportedUser || username,
         reason: text,
         status: "pending"
     });
@@ -472,7 +455,6 @@ app.get('/api/users/me/:username', (req, res) => {
     
     if (!user) return res.status(404).json({ message: "Brak sesji" });
 
-    // Sprawdzamy czy użytkownik ma już wysłane i oczekujące odwołanie
     const hasPendingAppeal = reports.some(r => r.reportedUser === user.username && r.type === 'appeal' && r.status === 'pending');
 
     res.json({ 
@@ -482,11 +464,68 @@ app.get('/api/users/me/:username', (req, res) => {
         warnings: user.warnings, 
         mutedUntil: user.mutedUntil,
         hasPendingAppeal: hasPendingAppeal,
-        notifications: user.notifications || [] // Zwracamy tablicę powiadomień
+        notifications: user.notifications || []
     });
 });
+// ================================================
+// ASYSTENT FILMOWY Z BLOKADA TEMATOW
+// ================================================
 
-// Start serwera
+app.post('/api/ai/recommend', async (req, res) => {
+    const { prompt, username } = req.body;
+    if (!prompt) return res.status(400).json({ message: "Brak zapytania." });
+
+    // Słowa kluczowe do prostej weryfikacji bezpieczeństwa przed wysłaniem
+    const popcultureWords = ['film', 'serial', 'rekomend', 'poleć', 'aktor', 'kino', 'reżyser', 'ogląd', 'scenariusz', 'oscar', 'netflix', 'hbo', 'seans', 'tytuł', 'komedia', 'horror', 'dramat', 'thriller', 'sci-fi', 'akcji'];
+    
+    const containsPopculture = popcultureWords.some(word => prompt.toLowerCase().includes(word));
+    
+    if (!containsPopculture && prompt.length > 15) {
+        return res.json({ reply: "Przepraszam, ale jestem asystentem dedykowanym wyłącznie dla platformy CineKeep. Odpowiadam tylko na pytania związane z filmami, serialami, reżyserami oraz rekomendacjami kinowymi. W czym filmowym mogę Ci pomóc?" });
+    }
+
+    try {
+        const GROQ_API_KEY = "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"; 
+
+       // PROMPT Z BLOKADĄ BŁĘDNYCH TŁUMACZEŃ TYTUŁÓW
+        const systemPrompt = "Jesteś kinowym asystentem aplikacji CineKeep. Twoim jedynym zadaniem jest polecanie konkretnych filmów i seriali na podstawie opisu użytkownika. Pisz mały opis filmu i zawsze w języku polskim, ale WSZYSTKIE TYTUŁY FILMÓW I SERIALI PODAWAJ KATEGORYCZNIE I WYŁĄCZNIE W ICH ORYGINALNYM ANGIELSKIM BRZMIENIU wraz z rokiem produkcji (np. 'Platoon' (1986), 'The Good, the Bad and the Ugly' (1966)). Nie próbuj tłumaczyć tytułów filmów i seriali na język polski.";
+
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${GROQ_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama-3.1-8b-instant", 
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: prompt }
+                ],
+                temperature: 0.6,
+                max_tokens: 250
+            })
+        });
+
+        if (!response.ok) {
+            const errLog = await response.text();
+            console.error("Błąd z Groq API:", errLog);
+            throw new Error("Problem z komunikacją z serwerem Groq");
+        }
+
+        const data = await response.json();
+        
+        const aiReply = data.choices[0].message.content.trim();
+
+        res.json({ reply: aiReply });
+
+    } catch (error) {
+        console.error("Błąd w endpoincie Groq AI:", error);
+        res.status(500).json({ reply: "Moje cyfrowe układy napotkały problem sieciowy z systemem Groq. Spróbuj ponownie!" });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Serwer CineKeep działa na: http://localhost:${PORT}`);
 });
