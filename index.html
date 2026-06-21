@@ -29,26 +29,13 @@
 
         <main id="content">
             <section id="home" class="tab-content active">
-                <div class="section-header">
+                <div class="class=section-header">
                     <h2>🔥 Proponowane dla Ciebie</h2>
                     <p>Najciekawsze premiery i trendy</p>
                 </div>
-                <div class="movie-grid">
-                    <div class="movie-card">
-                        <div class="poster">🎬</div>
-                        <h4>Batman</h4>
-                        <span class="tag">Akcja</span>
-                    </div>
-                    <div class="movie-card">
-                        <div class="poster">🎬</div>
-                        <h4>Diuna 2</h4>
-                        <span class="tag">Sci-Fi</span>
-                    </div>
-                    <div class="movie-card">
-                        <div class="poster">🎬</div>
-                        <h4>Incepcja</h4>
-                        <span class="tag">Thriller</span>
-                    </div>
+                
+                <div class="movie-grid" id="upcoming-releases-grid" style="display: flex; gap: 20px; overflow-x: auto; overflow-y: hidden; padding: 15px 5px; scroll-behavior: smooth; text-align: left;">
+                    <p style="color: #888; padding: 20px; text-align: center; width: 100%;">Ładowanie premier tego tygodnia...</p>
                 </div>
             </section>
 
@@ -233,14 +220,25 @@
                 <div id="community-reviews" class="reviews-grid"></div>
             </section>
             <section id="recommendations" class="tab-content">
-                <h2>🤖 Inteligentne Rekomendacje</h2>
-                <div class="ai-assistant">
-                    <div class="chat-window" id="chat-window">
-                        <p class="bot-msg">Cześć! Jestem Twoim asystentem filmowym. Jakiego filmu szukasz? (np. "Poleć mi western z Clintem Eastwoodem")</p>
+                <div class="section-header">
+                    <h2>🤖 Inteligentny Asystent CineKeep</h2>
+                    <p>Twój osobisty doradca filmowy i serialowy</p>
+                </div>
+
+                <div id="ai-usage-counter" style="color: #ff9f43; font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 1.1em;">
+                    Pozostało zapytań na dziś: 4/4
+                </div>
+
+                <div class="chat-container" style="max-width: 700px; margin: 0 auto; background: #1a1a2e; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <div id="ai-chat-box" style="height: 350px; overflow-y: auto; background: #161624; border-radius: 6px; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 10px;">
+                        <p style="color: #00b4d8; margin: 0; text-align: left;">
+                            <strong>Asystent:</strong> Cześć! Podaj mi swój nastrój, ulubiony gatunek lub aktora, a znajdę dla Ciebie idealny film lub serial! 🎬 Sprawdź mnie – odpowiadam tylko na tematy filmowe!
+                        </p>
                     </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="user-query" placeholder="Zapytaj AI...">
-                        <button id="send-query">Zapytaj</button>
+
+                    <div class="chat-input-group" style="display: flex; gap: 10px;">
+                        <input type="text" id="ai-input" placeholder="np. Poleć mi mroczny thriller psychologiczny z plot twistem..." style="flex: 1; padding: 12px; background: #161624; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-size: 1em;">
+                        <button onclick="window.askCineKeepAI()" style="padding: 12px 25px; background: #e94560; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Zapytaj</button>
                     </div>
                 </div>
             </section>

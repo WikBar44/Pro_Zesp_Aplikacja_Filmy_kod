@@ -1,11 +1,10 @@
 // =================================================================
 // 1. INICJALIZACJA BAZY DANYCH I ZMIENNYCH GLOBALNYCH
 // =================================================================
+
 let currentUser = null;
 let movies = [];
 let currentFilter = 'all';
-
-// Pomocnicze zmienne globalne dla zakładek (będą zainicjalizowane na start)
 let tabs = [];
 let contents = [];
 
@@ -17,9 +16,10 @@ function toggleReviewFields() {
     }
 }
 
-// =================================================================
-// 2. START APLIKACJI (DOMContentLoaded)
-// =================================================================
+// =============================
+// 2. START APLIKACJI 
+// =============================
+
 document.addEventListener('DOMContentLoaded', async () => {
     tabs = document.querySelectorAll('.tab-btn');
     contents = document.querySelectorAll('.tab-content');
@@ -35,11 +35,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (savedUser) {
         const parsed = JSON.parse(savedUser);
         try {
-            // POPRAWKA (Sprawa 2 i 4): Pobieramy najświeższe dane konta prosto z bazy serwera
             const response = await fetch(`http://localhost:3000/api/users/me/${parsed.username}`);
             if (response.ok) {
                 currentUser = await response.json();
-                localStorage.setItem('cinekeep_logged_user', JSON.stringify(currentUser)); // Aktualizacja lokalna
+                localStorage.setItem('cinekeep_logged_user', JSON.stringify(currentUser));
             } else {
                 currentUser = parsed;
             }
@@ -56,9 +55,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // =================================================================
-// 3. FUNKCJE POMOCNICZE INTERFEJSU I REWIZJI KONT
+// FUNKCJE POMOCNICZE INTERFEJSU I REWIZJI KONT
 // =================================================================
-// Zastąp funkcję checkAccountStatusAndNavigate() w script.js:
+
 async function checkAccountStatusAndNavigate() {
     if (!currentUser) return;
 
@@ -70,10 +69,9 @@ async function checkAccountStatusAndNavigate() {
         }
     } catch (e) { console.error(e); }
 
-    // OBSŁUGA POWIADOMIEŃ (Sprawa 3)
+    // OBSŁUGA POWIADOMIEŃ
     if (currentUser.notifications && currentUser.notifications.length > 0) {
         alert("🚨 NOWE POWIADOMIENIE OD ADMINISTRACJI:\n\n" + currentUser.notifications.join("\n"));
-        // Czyścimy powiadomienia na serwerze, żeby nie wyskakiwały przy każdym odświeżeniu
         fetch('http://localhost:3000/api/users/clear-notifications', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -87,7 +85,7 @@ async function checkAccountStatusAndNavigate() {
         showSection('muted-warning-section');
         const infoText = document.getElementById('mute-info-text');
         
-        // Elementy formularza odwołania w HTML
+        // Elementy formularza odwołania
         const appealTextarea = document.getElementById('appeal-text');
         const appealButton = document.getElementById('btn-submit-appeal');
 
@@ -97,7 +95,7 @@ async function checkAccountStatusAndNavigate() {
             infoText.innerHTML = `Twoje konto zostało <strong>całkowicie zawieszone</strong> z powodu zebrania 3 ostrzeżeń. Oczekujesz na decyzję Administratora (BAN lub przywrócenie konta).`;
         }
 
-        // BLOKADA FORMULARZA ODWOŁANIA (Sprawa 2):
+        // BLOKADA FORMULARZA ODWOŁANIA
         if (currentUser.hasPendingAppeal) {
             if(appealTextarea) {
                 appealTextarea.disabled = true;
@@ -118,7 +116,7 @@ async function checkAccountStatusAndNavigate() {
 }
 
 function updateUI() {
-    const navMenu = document.querySelector('.nav-menu'); // Pobieramy całe menu
+    const navMenu = document.querySelector('.nav-menu');
     const loginTabBtn = document.querySelector('[data-target="login-section"]');
     const logoutBtn = document.getElementById('logout-btn');
     
@@ -126,13 +124,12 @@ function updateUI() {
     const adminBtn = document.getElementById('nav-admin-btn');
     const applyModBtn = document.getElementById('nav-apply-mod-btn');
 
-    // Domyślnie ukrywamy panele specjalne
     if(modBtn) modBtn.style.display = 'none';
     if(adminBtn) adminBtn.style.display = 'none';
     if(applyModBtn) applyModBtn.style.display = 'none';
 
     if (currentUser) {
-        // UŻYTKOWNIK ZALOGOWANY -> Pokazujemy całe menu nawigacyjne!
+        // UŻYTKOWNIK ZALOGOWANY
         if (navMenu) navMenu.style.display = 'flex'; 
 
         loginTabBtn.innerHTML = `👤 ${currentUser.username}`;
@@ -149,7 +146,7 @@ function updateUI() {
             if(applyModBtn) applyModBtn.style.display = 'inline-block';
         }
     } else {
-        // UŻYTKOWNIK NIEZALOGOWANY -> Całkowicie chowamy pasek menu
+        // UŻYTKOWNIK NIEZALOGOWANY
         if (navMenu) navMenu.style.display = 'none'; 
 
         loginTabBtn.innerHTML = `🔑 Logowanie`;
@@ -174,16 +171,12 @@ function showSection(target) {
     const activeTab = document.querySelector(`[data-target="${target}"]`);
     if (activeTab) activeTab.classList.add('active');
 
-    // Wywołanie ładowania paneli przy ich otwieraniu
     if (target === 'mod-section') loadModeratorDashboard();
     if (target === 'admin-section') loadAdminDashboard();
 }
 
 // =================================================================
 // 4. AUTORYZACJA (LOGOWANIE I REJESTRACJA)
-// =================================================================
-// =================================================================
-// 4. AUTORYZACJA (LOGOWANIE I REJESTRACJA) - NOWA WERSJA
 // =================================================================
 
 // Funkcja przełączająca widoki między Logowaniem a Rejestracją
@@ -200,7 +193,7 @@ window.toggleAuthViews = function(view) {
     }
 }
 
-// 1. OBSŁUGA LOGOWANIA
+// OBSŁUGA LOGOWANIA
 const loginForm = document.getElementById('login-form');
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -223,6 +216,20 @@ if (loginForm) {
 
                 loginForm.reset();
                 updateUI();
+
+                const chatBox = document.getElementById('ai-chat-box');
+                if (chatBox) {
+                    chatBox.innerHTML = `
+                        <p style="text-align: left; margin: 0; color: #00b4d8;">
+                            <strong>Asystent:</strong> Cześć! Podaj mi swój nastrój, ulubiony gatunek lub aktora, a znajdę dla Ciebie idealny film lub serial! 🎬 Sprawdź mnie – odpowiadam tylko na tematy filmowe!
+                        </p>
+                    `;
+                }
+
+                if (typeof checkAiLimit === "function") {
+                    checkAiLimit();
+                }
+
                 alert("Witaj z powrotem, " + currentUser.username + "!");
                 checkAccountStatusAndNavigate(); 
                 loadMoviesFromServer();
@@ -236,7 +243,7 @@ if (loginForm) {
     });
 }
 
-// 2. OBSŁUGA ODDZIELNEJ REJESTRACJI (Z DUŻYM PRZYCISKIEM)
+// OBSŁUGA REJESTRACJI 
 const registerForm = document.getElementById('register-form');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
@@ -245,14 +252,13 @@ if (registerForm) {
         const username = document.getElementById('reg-user').value;
         const password = document.getElementById('reg-pass').value;
 
-        // NOWOŚĆ: Bezwzględna blokada rejestracji bez ptaszka!
+        //Blokada rejestracji
         const isAccepted = document.getElementById('reg-accept').checked;
         if (!isAccepted) {
             alert("Błąd: Musisz zaakceptować regulamin serwisu, aby utworzyć konto!");
-            return; // Przerywamy działanie funkcji, serwer nic nie dostanie
+            return;
         }
 
-        // Dalsza część Twojego kodu rejestracji (walidacja hasła, fetch, itd.)...
         const passwordError = isPasswordStrong(password);
         if (passwordError) {
             alert(passwordError);
@@ -271,7 +277,7 @@ if (registerForm) {
             if (response.ok) {
                 alert("Konto założone pomyślnie! Możesz się teraz zalogować.");
                 registerForm.reset();
-                toggleAuthViews('login'); // Automatyczny powrót do ekranu logowania
+                toggleAuthViews('login');
             } else {
                 alert("Błąd rejestracji: " + data.message);
             }
@@ -297,15 +303,30 @@ document.getElementById('logout-btn')?.addEventListener('click', () => {
     localStorage.removeItem('cinekeep_logged_user');
     alert("Wylogowano pomyślnie.");
     updateUI();
-    // Resetujemy widok autoryzacji do ekranu logowania przy wylogowaniu
+    
     toggleAuthViews('login');
     showSection('login-section');
     renderMovies();
-});
+
+    // Czyszczenie okna czatu AI z wiadomości
+    const chatBox = document.getElementById('ai-chat-box');
+    if (chatBox) {
+        chatBox.innerHTML = `
+            <p style="text-align: left; margin: 0; color: #00b4d8;">
+                <strong>Asystent:</strong> Cześć! Podaj mi swój nastrój, ulubiony gatunek lub aktora, a znajdę dla Ciebie idealny film lub serial! 🎬 Sprawdź mnie – odpowiadam tylko na tematy filmowe!
+            </p>
+        `;
+    }
+
+    if (typeof checkAiLimit === "function") {
+        checkAiLimit();
+    }
+}); 
 
 // =================================================================
 // 5. OBSŁUGA FILMÓW (DODAWANIE, FILTROWANIE, SORTOWANIE)
 // =================================================================
+
 const form = document.getElementById('movie-form');
 if (form) {
     form.addEventListener('submit', async function(e) {
@@ -318,7 +339,6 @@ if (form) {
 
         const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(cb => cb.value);
         
-        // NOWA WALIDACJA SEZONU (Wewnątrz submit #movie-form)
         const type = document.getElementById('movie-type').value;
         let season = "";
 
@@ -326,12 +346,11 @@ if (form) {
             const seasonInput = document.getElementById('movie-season').value.trim();
             const seasonNumber = parseInt(seasonInput);
 
-            // Sprawdzamy czy podano poprawną liczbę z zakresu 1-100
             if (!seasonInput || isNaN(seasonNumber) || seasonNumber < 1 || seasonNumber > 100) {
                 alert("Błąd: Proszę podać prawidłowy numer sezonu (liczba od 1 do 100)!");
-                return; // Przerywamy dodawanie
+                return;
             }
-            season = `Sezon ${seasonNumber}`; // Samoczynnie formatujemy na "Sezon X"
+            season = `Sezon ${seasonNumber}`;
         }
 
         const movieData = {
@@ -411,8 +430,9 @@ async function loadMoviesFromServer() {
 }
 
 // =================================================================
-// 6. RENDEROWANIE LIST (SPOŁECZNOŚĆ, KOLEJKA, HISTORIA)
+// RENDEROWANIE LIST (SPOŁECZNOŚĆ, KOLEJKA, HISTORIA)
 // =================================================================
+
 function renderMovies() {
     const pendingList = document.getElementById('pending-list');
     const watchedList = document.getElementById('watched-list');
@@ -439,9 +459,8 @@ function renderMovies() {
             ? `<div class="movie-tags-display">${movie.tags.map(t => `<span class="mini-tag">${t}</span>`).join('')}</div>` 
             : '';
 
-        // Listy personalne użytkownika z plakietkami Typu (Wewnątrz renderMovies)
+        // Listy personalne z plakietkami typu
         if (isOwner) {
-            // Generujemy małą plakietkę tekstową dla Twoich list
             const typeLabel = movie.type === 'tvshow' 
                 ? `<span style="color: #00b4d8; font-size: 0.8em; font-weight: bold; margin-right: 5px;">[📺 Serial, ${movie.season}]</span>` 
                 : `<span style="color: #74b9ff; font-size: 0.8em; font-weight: bold; margin-right: 5px;">[🎬 Film]</span>`;
@@ -479,15 +498,15 @@ function renderMovies() {
             }
         }
 
-// Globalna zakładka społeczność (Zaktualizowana wersja w renderMovies)
+        // Globalna zakładka społeczność
         if (movie.status === 'watched' && movie.visibility === 'public') {
             
-            // FILTRACJA (NOWOŚĆ): Sprawdzamy czy wpis pasuje do wybranego filtru typu
+            // FILTRACJA
             if (currentCommunityFilter !== 'all' && movie.type !== currentCommunityFilter) {
-                return; // Pomijamy ten wpis, jeśli nie zgadza się z filtrem typu
+                return;
             }
 
-            // PLAKIETKA TYPU (NOWOŚĆ): Dynamiczne budowanie etykiety
+            // PLAKIETKA
             let typeTag = '';
             if (movie.type === 'tvshow') {
                 typeTag = `<span style="background: #00b4d8; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; font-weight: bold; margin-right: 8px;">📺 SERIAL (${movie.season || 'Sezon 1'})</span>`;
@@ -530,9 +549,8 @@ window.markAsWatched = function(index) {
 window.toggleVisibility = function(index) {
     const currentVisibility = movies[index].visibility;
 
-    // POPRAWKA: Dodatkowe nawiasy wokół statusów oraz pozwolenie na chowanie filmu (zmiana na private)
     if (currentUser && (currentUser.status === 'muted' || currentUser.status === 'suspended')) {
-        if (currentVisibility !== 'public') { // Blokujemy tylko próbę upublicznienia
+        if (currentVisibility !== 'public') {
             alert("Błąd: Nie możesz upubliczniać filmów, ponieważ Twoje konto posiada aktywne ograniczenia społecznościowe!");
             return;
         }
@@ -558,8 +576,9 @@ async function saveAndRefresh() {
 }
 
 // =================================================================
-// 7. LOGIKA SYSTEMU KAR, MODERACJI I ADMINISTRACJI
+// LOGIKA SYSTEMU KAR, MODERACJI I ADMINISTRACJI
 // =================================================================
+
 async function reportComment(commentId, reportedUser) {
     if (!currentUser) { alert("Musisz być zalogowany, aby zgłaszać posty."); return; }
     if (currentUser.username === reportedUser) { alert("Nie możesz zgłosić samego siebie!"); return; }
@@ -653,7 +672,7 @@ async function loadAdminDashboard() {
             `).join('');
         }
 
-        // Render odwołań i podań w loadAdminDashboard
+        // Render odwołań i podań
         if(data.appeals.length === 0) {
             appealsList.innerHTML = '<p class="empty-info">Brak nowych odwołań/podań.</p>';
         } else {
@@ -685,7 +704,6 @@ async function loadAdminDashboard() {
             }).join('');
         }
 
-        // TUTAJ: Wywołujemy logi automatycznie przy otwieraniu dashboardu admina
         loadAdminLogs();
 
     } catch (e) { 
@@ -693,9 +711,10 @@ async function loadAdminDashboard() {
     }
 }
 
-// =================================================================
-// FUNKCJA LOGÓW JEST TERAZ CAŁKOWICIE OSOBNO I JEST WIDOCZNA GLOBALNIE
-// =================================================================
+// ======================
+// FUNKCJA LOGÓW
+// ======================
+
 async function loadAdminLogs() {
     const logsContainer = document.getElementById('admin-logs-list');
     if (!logsContainer) return;
@@ -735,7 +754,7 @@ async function executeAdminDecision(targetUser, decision, reportId = null) {
 }
 
 // =================================================================
-// 8. ASYSTENT AI, FORMULARZE SŁUCHACZY I WYSZUKIWARKA KONT
+// ASYSTENT AI, FORMULARZE SŁUCHACZY I WYSZUKIWARKA KONT
 // =================================================================
 document.getElementById('btn-submit-mod-apply')?.addEventListener('click', async () => {
     const text = document.getElementById('mod-apply-text').value;
@@ -745,7 +764,7 @@ document.getElementById('btn-submit-mod-apply')?.addEventListener('click', async
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                reportedUser: currentUser.username, // ZMIANA: reportedUser zamiast username
+                reportedUser: currentUser.username,
                 text: text 
             })
         });
@@ -755,7 +774,7 @@ document.getElementById('btn-submit-mod-apply')?.addEventListener('click', async
     } catch(e) { console.error(e); }
 });
 
-// POPRAWIONA OBSŁUGA ODWOŁANIA 
+// OBSŁUGA ODWOŁANIA 
 document.getElementById('btn-submit-appeal')?.addEventListener('click', async (e) => {
     if (e) e.preventDefault();
     const text = document.getElementById('appeal-text').value.trim();
@@ -787,15 +806,17 @@ document.getElementById('btn-submit-appeal')?.addEventListener('click', async (e
     }
 });
 
+//============================================================
+// Słuchacz wyszukiwania z obsługą podpowiedzi 
+//============================================================
 
-// Zaawansowany słuchacz wyszukiwania z obsługą podpowiedzi 
 document.getElementById('btn-search-user')?.addEventListener('click', async () => {
     const username = document.getElementById('search-username-input').value.trim();
     const resultBox = document.getElementById('search-user-result');
     if (!username || !resultBox) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/search-user/${username}`);
+        const response = await fetch(`http://localhost:3000/api/admin/search-user/${username}?t=${Date.now()}`);
         if (!response.ok) {
             const err = await response.json();
             resultBox.style.display = 'block';
@@ -806,7 +827,7 @@ document.getElementById('btn-search-user')?.addEventListener('click', async () =
         const data = await response.json();
         resultBox.style.display = 'block';
 
-        // SYTUACJA A: Znaleziono wielu pasujących użytkowników
+        // Znaleziono wielu pasujących użytkowników
         if (data.type === "list") {
             let listHtml = `<p style="margin: 0 0 10px 0; font-weight: bold; color: #ff9f43;">💡 Znaleziono kilku użytkowników. Kliknij właściwy login:</p><ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px;">`;
             
@@ -814,7 +835,7 @@ document.getElementById('btn-search-user')?.addEventListener('click', async () =
                 listHtml += `
                     <li style="background: #22254b; padding: 8px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
                         <span><strong>${u.username}</strong> (${u.role.toUpperCase()})</span>
-                        <button class="tab-btn" style="padding: 4px 10px; font-size: 0.85em; background: #e94560; border: none; border-radius: 3px; color: white; cursor: pointer;" onclick="document.getElementById('search-username-input').value='${u.username}'; document.getElementById('btn-search-user').click();">Wybierz</button>
+                        <button class="search-select-btn" style="padding: 4px 10px; font-size: 0.85em; background: #e94560; border: none; border-radius: 3px; color: white; cursor: pointer;" onclick="selectAndSearchUser('${u.username}')">Wybierz</button>
                     </li>
                 `;
             });
@@ -823,7 +844,7 @@ document.getElementById('btn-search-user')?.addEventListener('click', async () =
             return;
         }
 
-        // SYTUACJA B: Mamy jednego, konkretnego użytkownika (Wyświetlamy stary panel zarządzania)
+        //Mamy jednego, konkretnego użytkownika
         const u = data.user;
 
         let roleActionBtn = '';
@@ -867,10 +888,10 @@ document.getElementById('btn-search-user')?.addEventListener('click', async () =
 });
 
 // =================================================================
-// NOWE FUNKCJE: USUWANIE I EDYCJA FILMÓW PRZEZ UŻYTKOWNIKA
+// USUWANIE I EDYCJA FILMÓW PRZEZ UŻYTKOWNIKA
 // =================================================================
 
-// 1. Funkcja usuwająca film całkowicie z bazy
+// Funkcja usuwająca
 window.deleteMovieFromLibrary = async function(movieId) {
     if (!confirm("Czy na pewno chcesz całkowicie usunąć ten film i recenzję ze swojej biblioteki?")) return;
 
@@ -882,7 +903,6 @@ window.deleteMovieFromLibrary = async function(movieId) {
         const data = await response.json();
         alert(data.message);
 
-        // Odświeżamy dane z serwera i przerysowujemy listy
         loadMoviesFromServer();
     } catch (error) {
         console.error("Błąd podczas usuwania filmu:", error);
@@ -890,7 +910,7 @@ window.deleteMovieFromLibrary = async function(movieId) {
     }
 };
 
-// 2. Funkcja edytująca treść recenzji i ocenę
+// Funkcja edytująca
 window.editMovieReview = async function(movieId, oldRating, oldReview) {
     const newRating = prompt("Zmień ocenę filmu (1-10):", oldRating);
     if (newRating === null) return;
@@ -921,7 +941,6 @@ window.editMovieReview = async function(movieId, oldRating, oldReview) {
     }
 };
 
-// Pokazywanie pola sezonu, jeśli wybrano Serial
 window.toggleTvShowFields = function() {
     const type = document.getElementById('movie-type').value;
     const tvFields = document.getElementById('tvshow-fields');
@@ -930,7 +949,6 @@ window.toggleTvShowFields = function() {
     }
 };
 
-// Logika filtrowania typu na społeczności
 let currentCommunityFilter = 'all';
 window.filterCommunityType = function(type) {
     currentCommunityFilter = type;
@@ -950,24 +968,194 @@ window.filterCommunityType = function(type) {
     renderMovies();
 };
 
-document.getElementById('send-query')?.addEventListener('click', () => {
-    const input = document.getElementById('user-query');
-    const chatWindow = document.getElementById('chat-window');
+// =============================================
+// INTELIGENTNY ASYSTENT AI Z LIMITAMI ZAPYTAŃ
+// =============================================
 
-    if (input.value.trim() !== "") {
-        const userMsg = document.createElement('p');
-        userMsg.style.textAlign = "right";
-        userMsg.innerHTML = `<span style="background: #e94560; padding: 8px; border-radius: 10px 10px 0 10px; display: inline-block;">${input.value}</span>`;
-        chatWindow.appendChild(userMsg);
-
-        setTimeout(() => {
-            const botMsg = document.createElement('p');
-            botMsg.className = "bot-msg";
-            botMsg.innerText = "Analizuję Twoje preferencje... Funkcja AI zostanie w pełni aktywowana w Sprincie 6!";
-            chatWindow.appendChild(botMsg);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }, 1000);
-
-        input.value = "";
+function checkAiLimit() {
+    if (!currentUser) return 0;
+    
+    const today = new Date().toDateString();
+    const storageKey = `ai_limit_${currentUser.username}`;
+    
+    let aiData = JSON.parse(localStorage.getItem(storageKey)) || { date: today, count: 0 };
+    
+    // Reset licznika
+    if (aiData.date !== today) {
+        aiData = { date: today, count: 0 };
     }
-});
+    
+    const remaining = Math.max(0, 4 - aiData.count);
+    const counterEl = document.getElementById('ai-usage-counter');
+    if (counterEl) counterEl.innerText = `Pozostało zapytań na dziś: ${remaining}/4`;
+    
+    return remaining;
+}
+
+window.askCineKeepAI = async function() {
+    const inputEl = document.getElementById('ai-input');
+    const chatBox = document.getElementById('ai-chat-box');
+    if (!inputEl || !chatBox) return;
+
+    const userQuery = inputEl.value.trim();
+    if (!userQuery) return;
+
+    const remainingRequests = checkAiLimit();
+    
+    // BLOKADA
+    if (remainingRequests <= 0 && currentUser.role === 'user') {
+        alert("Osiągnąłeś dzienny limit 4 zapytań do Asystenta AI. Zapraszamy jutro!");
+        return;
+    }
+
+    chatBox.innerHTML += `
+        <p style="text-align: right; margin-top: 10px;">
+            <span style="background: #e94560; padding: 8px 12px; border-radius: 10px 10px 0 10px; display: inline-block; color: #fff;">
+                <strong>Ty:</strong> ${userQuery}
+            </span>
+        </p>
+    `;
+    inputEl.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const loadingId = `load-${Date.now()}`;
+    chatBox.innerHTML += `<p id="${loadingId}" style="color: #888; font-style: italic; margin-top: 10px;">🤖 Asystent myśli...</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+        // Ządanie do serwera 
+        const response = await fetch('http://localhost:3000/api/ai/recommend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userQuery, username: currentUser.username })
+        });
+        
+        const data = await response.json();
+        
+        document.getElementById(loadingId)?.remove();
+
+        chatBox.innerHTML += `
+            <p style="text-align: left; margin-top: 10px; color: #00b4d8;">
+                <strong>Asystent:</strong> ${data.reply}
+            </p>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (response.ok) {
+            const today = new Date().toDateString();
+            const storageKey = `ai_limit_${currentUser.username}`;
+            let aiData = JSON.parse(localStorage.getItem(storageKey)) || { date: today, count: 0 };
+            if (aiData.date !== today) aiData = { date: today, count: 0 };
+            
+            aiData.count++;
+            localStorage.setItem(storageKey, JSON.stringify(aiData));
+            
+            checkAiLimit();
+        }
+
+    } catch (error) {
+        document.getElementById(loadingId)?.remove();
+        chatBox.innerHTML += `<p style="color: #e94560; margin-top: 10px;"><strong>System:</strong> Błąd połączenia z serwerem AI.</p>`;
+    }
+};
+
+// =================================================================
+// ELENSTYCZNE PREMIERY TYGODNIOWE
+// =================================================================
+window.loadUpcomingReleases = async function() {
+    const grid = document.getElementById('upcoming-releases-grid');
+    if (!grid) return;
+
+    try {
+        const apiKey = "16c0871d2ebe3568c20452558483524c";  
+
+        //zakres dat
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 = Niedziela, 1 = Poniedziałek, ..., 6 = Sobota
+        
+        let monday = new Date(today);
+        let dateFrom, dateTo;
+        
+        if (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0) {
+            dateFrom = today.toISOString().split('T')[0];
+            
+            const sunday = new Date(today);
+            const daysToNextSunday = (7 - dayOfWeek) + 7;
+            sunday.setDate(today.getDate() + daysToNextSunday);
+            dateTo = sunday.toISOString().split('T')[0];
+        } else {
+            const distanceFromMonday = 1 - dayOfWeek;
+            monday.setDate(today.getDate() + distanceFromMonday);
+            
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            
+            dateFrom = monday.toISOString().split('T')[0];
+            dateTo = sunday.toISOString().split('T')[0];
+        }
+
+        const url = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=pl-PL&sort_by=popularity.desc&primary_release_date.gte=${dateFrom}&primary_release_date.lte=${dateTo}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("API Error");
+
+        const data = await response.json();
+        let movies = data.results || [];
+
+        if (movies.length > 0) {
+            // Sortowanie
+            movies.sort((a, b) => {
+                if (!a.release_date) return 1;
+                if (!b.release_date) return -1;
+                return b.release_date.localeCompare(a.release_date);
+            });
+
+            // Lista maksymalnie 20 filmów
+            grid.innerHTML = movies.slice(0, 20).map(movie => {
+                const posterUrl = movie.poster_path 
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+                    : 'https://via.placeholder.com/150x220?text=CineKeep';
+                
+                let displayDate = '2026';
+                if (movie.release_date) {
+                    const parts = movie.release_date.split('-');
+                    displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                }
+
+                const tmdbLink = `https://www.themoviedb.org/movie/${movie.id}?language=pl-PL`;
+
+                return `
+                    <div class="movie-card" onclick="window.open('${tmdbLink}', '_blank')" style="cursor: pointer; min-width: 180px; max-width: 180px; flex-shrink: 0; margin: 0; box-sizing: border-box;" title="Zobacz szczegóły na TMDB">
+                        <div class="poster" style="background-image: url('${posterUrl}'); background-size: cover; background-position: center; min-height: 250px; border-radius: 4px;"></div>
+                        <h4 style="margin: 10px 0 5px 0; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;" title="${movie.title}">${movie.title}</h4>
+                        <span class="tag" style="background: #e94560; padding: 2px 8px; border-radius: 3px; font-size: 0.75em; color: #fff; display: inline-block;">📅 ${displayDate}</span>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            grid.innerHTML = '<p style="color: #888; padding: 20px; grid-column: 1/-1; text-align: center;">Brak nowych premier w tym okresie.</p>';
+        }
+    } catch (error) {
+        console.error("Błąd ładowania premier tygodniowych:", error);
+    }
+};
+
+
+window.selectAndSearchUser = function(username) {
+    const input = document.getElementById('search-username-input');
+    const searchBtn = document.getElementById('btn-search-user');
+    
+    if (input && searchBtn) {
+        input.value = username; 
+        
+        setTimeout(() => {
+            searchBtn.click();
+        }, 50);
+    }
+};
+
+setTimeout(() => {
+    if (typeof loadUpcomingReleases === 'function') {
+        loadUpcomingReleases();
+    }
+}, 300);
