@@ -485,7 +485,7 @@ app.post('/api/ai/recommend', async (req, res) => {
     }
 
     try {
-        const GROQ_API_KEY = "gsk/////\\\\_WURItQsZlkwYdpdHnyuoWGdyb3FYR2SS90T03we20b5kRYlpOyZ3"; 
+        const GROQ_API_KEY = process.env.GROQ_API_KEY || "TUTAJ_WKLEJ_SWÓJ_KLUCZ_Z_GROQ";
 
        // PROMPT Z BLOKADĄ BŁĘDNYCH TŁUMACZEŃ TYTUŁÓW
         const systemPrompt = "Jesteś kinowym asystentem aplikacji CineKeep. Twoim jedynym zadaniem jest polecanie konkretnych filmów i seriali na podstawie opisu użytkownika. Pisz mały opis filmu i zawsze w języku polskim, ale WSZYSTKIE TYTUŁY FILMÓW I SERIALI PODAWAJ KATEGORYCZNIE I WYŁĄCZNIE W ICH ORYGINALNYM ANGIELSKIM BRZMIENIU wraz z rokiem produkcji (np. 'Platoon' (1986), 'The Good, the Bad and the Ugly' (1966)). Nie próbuj tłumaczyć tytułów filmów i seriali na język polski.";
